@@ -1,5 +1,5 @@
 # DevOpsFoundry
-Welcome to DevOpsFoundry—my personal repository for everything related to DevOps, cloud computing, automation, and infrastructure as code. This repository is a centralised hub where I experiment, create, and refine projects that explore the full spectrum of DevOps practices, utilising a variety of tools, techniques, and technologies.
+Welcome to DevOpsFoundry, my personal repository for everything related to DevOps, cloud computing, automation, and infrastructure as code. This repository is a centralised hub where I experiment, create, and refine projects that explore the full spectrum of DevOps practices, utilising a variety of tools, techniques, and technologies.
 
 Within this repository, you'll discover a diverse collection of sub-projects, each dedicated to a different aspect of the DevOps lifecycle. From CI/CD pipelines and container orchestration to cloud deployments and monitoring systems, these projects represent my ongoing journey to enhance my skills and build a comprehensive portfolio.
 
