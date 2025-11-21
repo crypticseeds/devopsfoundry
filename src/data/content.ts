@@ -64,11 +64,31 @@ export const skills = {
         },
     ],
     certifications: [
-        "AWS Certified Cloud Practitioner",
-        "AWS Certified Solutions Architect – Associate",
-        "HashiCorp Certified: Terraform Associate (003)",
-        "ISC2: Certified in Cybersecurity (CC)",
-        "CKA: Certified Kubernetes Administrator"
+        {
+            name: "AWS Certified Cloud Practitioner",
+            badge: "/badges/aws-cloud-practitioner.png", // Placeholder
+            link: "https://www.credly.com/badges/47c4b4db-c9b2-4a19-827b-af14d65500bf/public_url",
+        },
+        {
+            name: "AWS Certified Solutions Architect – Associate",
+            badge: "/badges/aws-solutions-architect.png", // Placeholder
+            link: "https://www.credly.com/badges/694c6087-d904-45c8-89fb-e66db785d6c3/public_url",
+        },
+        {
+            name: "HashiCorp Certified: Terraform Associate (003)",
+            badge: "/badges/terraform-associate.png", // Placeholder
+            link: "https://www.credly.com/badges/eacb65b4-5d8f-4a34-bd7e-d339cb0f6e0a/public_url",
+        },
+        {
+            name: "ISC2: Certified in Cybersecurity (CC)",
+            badge: "/badges/isc2-cc.png", // Placeholder
+            link: "https://www.credly.com/badges/e8461054-5b74-4832-aef2-0a885321aa22/public_url",
+        },
+        {
+            name: "CKA: Certified Kubernetes Administrator",
+            badge: "/badges/cka.png", // Placeholder
+            link: "https://www.credly.com/badges/e62e14aa-ba2a-4aac-886c-2b98a20e180c/public_url",
+        }
     ]
 }
 
@@ -133,8 +153,8 @@ export const footer = {
     copyright: "© 2025 DevOps Foundry – Femi Akinlotan.",
     rights: "All rights reserved.",
     social: {
-        linkedin: "https://linkedin.com",
-        github: "https://github.com",
-        x: "https://x.com"
+        linkedin: "https://www.linkedin.com/in/femi-akinlotan/",
+        github: "https://github.com/crypticseeds",
+        x: "https://x.com/crypticseeds"
     }
 }

@@ -1,3 +1,4 @@
+import Image from "next/image"
 import { BadgeCheck, Cpu, Server, Terminal } from "lucide-react"
 import { skills } from "@/data/content"
 
@@ -46,19 +47,32 @@ export function Skills() {
                 </div>
 
                 {/* Certifications */}
-                <div className="mt-16">
-                    <h3 className="mb-8 text-center text-xl font-semibold text-secondary">
+                <div className="mt-20">
+                    <h3 className="mb-12 text-center text-2xl font-bold md:text-3xl">
                         Certifications
                     </h3>
-                    <div className="flex flex-wrap justify-center gap-4">
+                    <div className="flex flex-wrap justify-center gap-6 md:gap-8">
                         {skills.certifications.map((cert) => (
-                            <div
-                                key={cert}
-                                className="flex items-center gap-2 rounded-full border border-secondary/20 bg-background px-4 py-2 text-sm font-medium text-secondary"
+                            <a
+                                key={cert.name}
+                                href={cert.link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="group flex flex-col items-center gap-3 text-center"
                             >
-                                <BadgeCheck className="h-4 w-4 text-accent-blue" />
-                                <span>{cert}</span>
-                            </div>
+                                <div className="relative flex h-24 w-24 items-center justify-center rounded-full bg-white/5 p-4 shadow-sm transition-all duration-300 group-hover:scale-110 group-hover:bg-white/10 group-hover:shadow-md">
+                                    <Image
+                                        src={cert.badge}
+                                        alt={cert.name}
+                                        width={96}
+                                        height={96}
+                                        className="h-full w-full object-contain transition-transform duration-300"
+                                    />
+                                </div>
+                                <span className="max-w-[140px] text-xs font-medium text-secondary transition-colors group-hover:text-foreground">
+                                    {cert.name}
+                                </span>
+                            </a>
                         ))}
                     </div>
                 </div>
