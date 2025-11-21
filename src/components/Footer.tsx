@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { Github, Linkedin } from "lucide-react"
-import { socialLinks } from "@/data/content"
+import { footer } from "@/data/content"
 
 export function Footer() {
     return (
@@ -8,13 +8,13 @@ export function Footer() {
             <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-6 px-6 md:flex-row">
                 <div className="flex flex-col items-center gap-2 md:items-start">
                     <span className="text-sm font-medium text-foreground">
-                        © 2025 DevOps Foundry – Femi Akinlotan. <span className="text-secondary font-normal">All rights reserved.</span>
+                        {footer.copyright} <span className="text-secondary font-normal">{footer.rights}</span>
                     </span>
                 </div>
 
                 <div className="flex items-center gap-6">
                     <Link
-                        href={socialLinks.linkedin}
+                        href={footer.social.linkedin}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-secondary transition-colors hover:text-accent-blue"
@@ -23,7 +23,7 @@ export function Footer() {
                         <Linkedin className="h-5 w-5" />
                     </Link>
                     <Link
-                        href={socialLinks.github}
+                        href={footer.social.github}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-secondary transition-colors hover:text-foreground"
@@ -32,7 +32,7 @@ export function Footer() {
                         <Github className="h-5 w-5" />
                     </Link>
                     <Link
-                        href={socialLinks.x}
+                        href={footer.social.x}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-secondary transition-colors hover:text-foreground"

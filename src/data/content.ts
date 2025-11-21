@@ -17,6 +17,61 @@ export const hero = {
     }
 }
 
+export const skills = {
+    title: "Skills & Tooling",
+    subtitle: "A comprehensive toolkit for building scalable, reliable, and intelligent systems.",
+    groups: [
+        {
+            title: "DevOps & Platform",
+            skills: [
+                "Kubernetes",
+                "Docker",
+                "Terraform",
+                "AWS",
+                "Azure",
+                "GCP",
+                "GitHub Actions",
+                "ArgoCD",
+                "Helm",
+                "Ansible",
+            ],
+        },
+        {
+            title: "Site Reliability Engineering",
+            skills: [
+                "Prometheus",
+                "Grafana",
+                "ELK Stack",
+                "Datadog",
+                "OpenTelemetry",
+                "Incident Response",
+                "SLOs/SLIs",
+                "Chaos Engineering",
+            ],
+        },
+        {
+            title: "AI Engineering & MLOps",
+            skills: [
+                "Python",
+                "LangChain",
+                "LangSmith",
+                "Ollama",
+                "MLflow",
+                "Vector DBs",
+                "RAG Pipelines",
+                "Model Deployment",
+            ],
+        },
+    ],
+    certifications: [
+        "AWS Certified Cloud Practitioner",
+        "AWS Certified Solutions Architect – Associate",
+        "HashiCorp Certified: Terraform Associate (003)",
+        "ISC2: Certified in Cybersecurity (CC)",
+        "CKA: Certified Kubernetes Administrator"
+    ]
+}
+
 export const projects = [
     {
         title: "Kubernetes Auto-Scaler",
@@ -74,8 +129,12 @@ export const blogPosts = [
     },
 ]
 
-export const socialLinks = {
-    linkedin: "https://linkedin.com",
-    github: "https://github.com",
-    x: "https://x.com"
+export const footer = {
+    copyright: "© 2025 DevOps Foundry – Femi Akinlotan.",
+    rights: "All rights reserved.",
+    social: {
+        linkedin: "https://linkedin.com",
+        github: "https://github.com",
+        x: "https://x.com"
+    }
 }

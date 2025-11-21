@@ -1,72 +1,32 @@
 import { BadgeCheck, Cpu, Server, Terminal } from "lucide-react"
+import { skills } from "@/data/content"
 
 export function Skills() {
-    const skillGroups = [
-        {
-            title: "DevOps & Platform",
-            icon: <Server className="h-6 w-6 text-accent-blue" />,
-            skills: [
-                "Kubernetes",
-                "Docker",
-                "Terraform",
-                "AWS",
-                "Azure",
-                "GCP",
-                "GitHub Actions",
-                "ArgoCD",
-                "Helm",
-                "Ansible",
-            ],
-        },
-        {
-            title: "Site Reliability Engineering",
-            icon: <Terminal className="h-6 w-6 text-accent-red" />,
-            skills: [
-                "Prometheus",
-                "Grafana",
-                "ELK Stack",
-                "Datadog",
-                "OpenTelemetry",
-                "Incident Response",
-                "SLOs/SLIs",
-                "Chaos Engineering",
-            ],
-        },
-        {
-            title: "AI Engineering & MLOps",
-            icon: <Cpu className="h-6 w-6 text-foreground" />,
-            skills: [
-                "Python",
-                "LangChain",
-                "LangSmith",
-                "Ollama",
-                "MLflow",
-                "Vector DBs",
-                "RAG Pipelines",
-                "Model Deployment",
-            ],
-        },
+    const icons = [
+        <Server className="h-6 w-6 text-accent-blue" />,
+        <Terminal className="h-6 w-6 text-accent-red" />,
+        <Cpu className="h-6 w-6 text-foreground" />,
     ]
 
     return (
         <section id="skills" className="bg-secondary/5 py-24">
             <div className="mx-auto max-w-5xl px-6">
                 <div className="mb-16 flex flex-col items-center text-center">
-                    <h2 className="mb-4 text-3xl font-bold md:text-4xl">Skills & Tooling</h2>
+                    <h2 className="mb-4 text-3xl font-bold md:text-4xl">{skills.title}</h2>
                     <p className="max-w-2xl text-secondary">
-                        A comprehensive toolkit for building scalable, reliable, and intelligent systems.
+                        {skills.subtitle}
                     </p>
                 </div>
 
                 <div className="grid gap-8 md:grid-cols-3">
-                    {skillGroups.map((group) => (
+                    {skills.groups.map((group, index) => (
                         <div
                             key={group.title}
                             className="group relative overflow-hidden rounded-2xl border border-white/10 bg-background p-8 shadow-sm transition-all hover:-translate-y-1 hover:shadow-md dark:border-white/5"
                         >
                             <div className="mb-6 flex items-center gap-3">
                                 <div className="rounded-lg bg-secondary/10 p-2.5 transition-colors group-hover:bg-secondary/20">
-                                    {group.icon}
+                                    {icons[index]}
                                 </div>
                                 <h3 className="font-bold leading-tight">{group.title}</h3>
                             </div>
@@ -91,13 +51,13 @@ export function Skills() {
                         Certifications
                     </h3>
                     <div className="flex flex-wrap justify-center gap-4">
-                        {[1, 2, 3].map((i) => (
+                        {skills.certifications.map((cert) => (
                             <div
-                                key={i}
+                                key={cert}
                                 className="flex items-center gap-2 rounded-full border border-secondary/20 bg-background px-4 py-2 text-sm font-medium text-secondary"
                             >
                                 <BadgeCheck className="h-4 w-4 text-accent-blue" />
-                                <span>AWS Certification Placeholder</span>
+                                <span>{cert}</span>
                             </div>
                         ))}
                     </div>
