@@ -4,7 +4,8 @@ export const hero = {
         first: "DevOps, SRE &",
         second: "Platform Engineer"
     },
-    description: "I help engineering teams ship faster and more safely by building reliable cloud-native infrastructure, automated CI/CD pipelines, and scalable AI/ML workflows.",
+    description: "Building reliable cloud-native infrastructure and scalable AI/ML workflows.",
+    aboutMe: "I am Femi Akinlotan, with 5+ years of experience. I help engineering teams ship faster and more safely by building reliable cloud-native infrastructure, automated CI/CD pipelines, and scalable AI/ML workflows.",
     buttons: {
         resume: {
             text: "View Resume",

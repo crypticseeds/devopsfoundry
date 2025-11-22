@@ -1,70 +1,107 @@
+"use client"
+
 import Link from "next/link"
-import { ArrowRight, Download, Mail, MapPin } from "lucide-react"
+import { ArrowRight, Download, MapPin } from "lucide-react"
 import { hero } from "@/data/content"
+import { Terminal } from "./Terminal"
+import { TechOrbit } from "./TechOrbit"
+import { motion } from "framer-motion"
 
 export function Hero() {
     return (
-        <section className="relative flex min-h-[90vh] flex-col items-center justify-center overflow-hidden pt-20 md:pt-0">
-            <div className="mx-auto grid max-w-5xl grid-cols-1 gap-12 px-6 md:grid-cols-2 md:items-center">
+        <section className="relative flex min-h-[90vh] flex-col items-center justify-center overflow-hidden pt-20 md:pt-0 bg-background transition-colors duration-300">
+            {/* Background Grid Effect */}
+            <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]" />
+            <div className="absolute left-0 right-0 top-0 -z-10 m-auto h-[310px] w-[310px] rounded-full bg-blue-500/20 opacity-20 blur-[100px] dark:bg-blue-500 dark:opacity-20" />
+
+            <div className="relative z-10 mx-auto grid max-w-7xl grid-cols-1 gap-12 px-6 md:grid-cols-2 md:items-center">
 
                 {/* Text Content */}
-                <div className="flex flex-col gap-6 text-center md:text-left">
+                <div className="flex flex-col gap-8 text-center md:text-left">
                     <div className="flex flex-col gap-4 md:items-start">
-                        <div className="inline-flex items-center gap-2 rounded-full bg-secondary/10 px-4 py-1.5 text-sm font-medium text-secondary self-center md:self-auto">
-                            <MapPin className="h-4 w-4" />
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="inline-flex items-center gap-2 rounded-full bg-secondary/10 border border-secondary/20 px-4 py-1.5 text-sm font-medium text-emerald-600 dark:text-emerald-400 self-center md:self-auto"
+                        >
+                            <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+                            <MapPin className="h-3 w-3" />
                             <span>{hero.location}</span>
-                        </div>
-                        <h1 className="text-3xl font-bold leading-tight tracking-tight md:text-5xl">
-                            {hero.title.first} <br className="hidden md:block" />
-                            {hero.title.second}
+                        </motion.div>
+
+                        <h1 className="text-4xl font-bold leading-tight tracking-tight md:text-6xl text-foreground">
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-cyan-500 dark:from-emerald-400 dark:to-cyan-400">
+                                DevOps & SRE
+                            </span>
+                            <br />
+                            <span className="text-2xl md:text-4xl text-muted-foreground font-mono">
+                                &gt; Engineering Excellence
+                            </span>
                         </h1>
                     </div>
 
-                    <p className="text-lg leading-relaxed text-secondary md:text-xl">
-                        {hero.description}
-                    </p>
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.5 }}
+                        className="w-full max-w-lg mx-auto md:mx-0"
+                    >
+                        <Terminal
+                            commands={[
+                                { cmd: "whoami", output: "SRE & AI Engineer" },
+                                { cmd: "uptime", output: "99.99% availability" },
+                                { cmd: "cat mission.txt", output: "Automating the future, one pipeline at a time." }
+                            ]}
+                        />
+                    </motion.div>
 
-                    <div className="flex w-full max-w-md flex-col gap-6 sm:flex-row sm:justify-center md:justify-between">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.8 }}
+                        className="flex w-full max-w-lg flex-row items-center justify-between gap-4 pt-4 mx-auto md:mx-0"
+                    >
                         <Link
                             href={hero.buttons.resume.url}
                             target="_blank"
-                            className="group flex items-center justify-center gap-2 rounded-full border border-secondary/20 bg-transparent px-8 py-3.5 text-sm font-bold text-foreground shadow-sm transition-all duration-300 hover:border-foreground hover:bg-foreground hover:text-background hover:scale-105 active:scale-95"
+                            className="group flex items-center justify-center gap-2 rounded-full border border-foreground/10 bg-foreground/5 px-8 py-3.5 text-sm font-bold text-foreground backdrop-blur-sm transition-all hover:bg-black hover:text-white hover:scale-105"
                         >
                             <Download className="h-4 w-4" />
                             {hero.buttons.resume.text}
                         </Link>
                         <Link
                             href={hero.buttons.projects.url}
-                            className="group flex items-center justify-center gap-2 rounded-full border border-secondary/20 bg-transparent px-8 py-3.5 text-sm font-bold text-foreground shadow-sm transition-all duration-300 hover:border-foreground hover:bg-foreground hover:text-background hover:scale-105 active:scale-95"
+                            className="group flex items-center justify-center gap-2 rounded-full border border-foreground/10 bg-foreground/5 px-8 py-3.5 text-sm font-bold text-foreground backdrop-blur-sm transition-all hover:bg-black hover:text-white hover:scale-105"
                         >
                             {hero.buttons.projects.text}
                             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                         </Link>
-                    </div>
+                    </motion.div>
                 </div>
 
-                {/* Image/Illustration Area */}
-                <div className="relative mx-auto aspect-square w-full max-w-md overflow-hidden rounded-2xl bg-secondary/5 md:ml-auto">
-                    <div className="absolute inset-0 flex items-center justify-center text-secondary/20">
-                        {/* Placeholder for Portrait/Illustration */}
-                        <div className="flex flex-col items-center gap-4">
-                            <div className="h-32 w-32 rounded-full bg-secondary/10 animate-pulse" />
-                            <span className="text-sm font-medium">Portrait Placeholder</span>
-                        </div>
-                    </div>
+                {/* Tech Orbit Visual */}
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 1 }}
+                    className="relative mx-auto w-full max-w-[350px] md:ml-auto md:mr-0"
+                >
+                    <TechOrbit />
 
-                    {/* Decorative Elements */}
-                    <div className="absolute -right-12 -top-12 h-64 w-64 rounded-full bg-accent-blue/5 blur-3xl" />
-                    <div className="absolute -bottom-12 -left-12 h-64 w-64 rounded-full bg-accent-red/5 blur-3xl" />
-                </div>
-            </div>
-
-            {/* Scroll Indicator */}
-            <div className="absolute bottom-8 left-1/2 hidden -translate-x-1/2 animate-bounce md:block">
-                <div className="h-10 w-6 rounded-full border-2 border-secondary/30 p-1">
-                    <div className="h-2 w-full rounded-full bg-secondary/50" />
-                </div>
+                    {/* About Me Section */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 1.2, duration: 0.8 }}
+                        className="mt-6 text-center"
+                    >
+                        <p className="text-sm text-muted-foreground leading-relaxed font-mono">
+                            {hero.aboutMe}
+                        </p>
+                    </motion.div>
+                </motion.div>
             </div>
         </section>
     )
 }
+

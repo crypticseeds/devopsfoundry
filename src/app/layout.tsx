@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Montserrat, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
+import { StatusWidget } from "@/components/StatusWidget";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -40,6 +41,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           {children}
+          <StatusWidget />
         </ThemeProvider>
       </body>
     </html>

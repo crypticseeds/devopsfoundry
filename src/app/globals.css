@@ -23,9 +23,13 @@
   --primary: #171717;
   --secondary: #737373;
   --accent-red: #ef4444;
-  /* Adjust to match logo if needed */
   --accent-blue: #3b82f6;
-  /* Adjust to match logo if needed */
+
+  /* SRE/AI Theme Colors - Light Mode */
+  --terminal-green: #10b981;
+  --terminal-bg: #1e293b;
+  --cyber-purple: #8b5cf6;
+  --space-blue: #0f172a;
 }
 
 .dark {
@@ -33,6 +37,17 @@
   --foreground: #ededed;
   --primary: #ededed;
   --secondary: #a3a3a3;
+
+  /* SRE/AI Theme Colors - Dark Mode */
+  --terminal-green: #34d399;
+  --terminal-bg: #0f172a;
+  --cyber-purple: #a78bfa;
+  --space-blue: #1e293b;
+
+  /* Overrides for SRE feel */
+  --background: #030712;
+  /* Very dark blue/black */
+  --foreground: #e2e8f0;
 }
 
 body {
