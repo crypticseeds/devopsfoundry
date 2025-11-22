@@ -40,7 +40,7 @@ export default async function TutorialPage(props: TutorialPageProps) {
     const MDX = page.data.body;
 
     return (
-        <DocsPage toc={page.data.toc} tableOfContent={{ style: 'clerk' }}>
+        <DocsPage toc={page.data.toc} tableOfContent={{ style: 'clerk' }} footer={{ enabled: false }}>
             <DocsBody>
                 <h1>{page.data.title}</h1>
                 {page.data.description && (

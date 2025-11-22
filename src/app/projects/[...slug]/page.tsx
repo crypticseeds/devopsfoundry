@@ -47,6 +47,7 @@ export default async function ProjectPage(props: ProjectPageProps) {
         <DocsPage 
             toc={page.data.toc} 
             tableOfContent={{ style: 'clerk' }}
+            footer={{ enabled: false }}
         >
                 <DocsBody>
                     {banner && (

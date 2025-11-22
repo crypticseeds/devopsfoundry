@@ -45,6 +45,7 @@ export default async function BlogPostPage(props: BlogPostPageProps) {
         <DocsPage 
             toc={page.data.toc} 
             tableOfContent={{ style: 'clerk' }}
+            footer={{ enabled: false }}
         >
                 <DocsBody>
                     <Breadcrumbs items={createBlogBreadcrumbs({ postTitle: page.data.title })} />

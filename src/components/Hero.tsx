@@ -18,25 +18,19 @@ export function Hero() {
 
                 {/* Text Content */}
                 <div className="flex flex-col gap-8 text-center md:text-left">
-                    <div className="flex flex-col gap-4 md:items-start">
+                    <div className="flex flex-col gap-2 md:items-start">
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            className="inline-flex items-center gap-2 rounded-full bg-secondary/10 border border-secondary/20 px-4 py-1.5 text-sm font-medium text-emerald-600 dark:text-emerald-400 self-center md:self-auto"
+                            className="inline-flex items-center gap-2 rounded-full bg-secondary/10 border border-secondary/20 px-4 py-1.5 text-sm font-medium text-blue-600 dark:text-blue-400 self-center md:self-auto"
                         >
-                            <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+                            <div className="h-2 w-2 rounded-full bg-blue-500 animate-pulse" />
                             <MapPin className="h-3 w-3" />
                             <span>{hero.location}</span>
                         </motion.div>
 
-                        <h1 className="text-4xl font-bold leading-tight tracking-tight md:text-6xl text-foreground">
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-cyan-500 dark:from-emerald-400 dark:to-cyan-400">
-                                DevOps & SRE
-                            </span>
-                            <br />
-                            <span className="text-2xl md:text-4xl text-muted-foreground font-mono">
-                                &gt; Engineering Excellence
-                            </span>
+                        <h1 className="text-3xl font-bold leading-tight tracking-tight md:text-5xl text-foreground">
+                            Femi Akinlotan
                         </h1>
                     </div>
 

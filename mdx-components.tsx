@@ -1,7 +1,13 @@
 import type { MDXComponents } from 'mdx/types';
+import defaultMdxComponents from 'fumadocs-ui/mdx';
+import * as Twoslash from 'fumadocs-twoslash/ui';
+import { Mermaid } from '@/components/mdx/mermaid';
 
 export function useMDXComponents(components: MDXComponents): MDXComponents {
     return {
+        ...defaultMdxComponents,
+        ...Twoslash,
+        Mermaid,
         ...components,
     };
 }

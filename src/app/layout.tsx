@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Montserrat, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import "katex/dist/katex.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { StatusWidget } from "@/components/StatusWidget";
 
