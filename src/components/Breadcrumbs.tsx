@@ -30,7 +30,7 @@ export function Breadcrumbs({ items }: BreadcrumbsProps) {
                             {item.href && !isLast ? (
                                 <Link 
                                     href={item.href}
-                                    className="flex items-center gap-1.5 hover:text-accent-blue transition-colors"
+                                    className="flex items-center gap-1.5 hover:text-accent-blue transition-colors no-underline"
                                 >
                                     {item.icon && (
                                         <span className="inline-flex" aria-hidden="true">

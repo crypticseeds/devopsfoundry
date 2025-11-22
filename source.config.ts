@@ -12,4 +12,13 @@ export const tutorials = defineDocs({
     dir: 'content/docs/tutorials',
 });
 
-export default defineConfig();
+export default defineConfig({
+    mdxOptions: {
+        rehypeCodeOptions: {
+            themes: {
+                light: 'github-light',
+                dark: 'github-dark',
+            },
+        },
+    },
+});

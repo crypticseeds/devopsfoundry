@@ -9,7 +9,16 @@ var projects = defineDocs({
 var tutorials = defineDocs({
   dir: "content/docs/tutorials"
 });
-var source_config_default = defineConfig();
+var source_config_default = defineConfig({
+  mdxOptions: {
+    rehypeCodeOptions: {
+      themes: {
+        light: "github-light",
+        dark: "github-dark"
+      }
+    }
+  }
+});
 export {
   blogs,
   source_config_default as default,

@@ -3,6 +3,22 @@ import { createMDX } from "fumadocs-mdx/next";
 
 const nextConfig: NextConfig = {
   /* config options here */
+  async rewrites() {
+    return [
+      {
+        source: '/blog/:path*.mdx',
+        destination: '/llms.mdx/:path*',
+      },
+      {
+        source: '/projects/:path*.mdx',
+        destination: '/llms.mdx/:path*',
+      },
+      {
+        source: '/tutorials/:path*.mdx',
+        destination: '/llms.mdx/:path*',
+      },
+    ];
+  },
 };
 
 const withMDX = createMDX();
