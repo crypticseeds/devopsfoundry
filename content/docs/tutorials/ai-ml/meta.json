@@ -1,0 +1,9 @@
+{
+    "title": "AI/ML",
+    "description": "Machine learning deployment and MLOps",
+    "root": true,
+    "icon": "Cpu",
+    "pages": [
+        "fastapi-ml-deployment"
+    ]
+}

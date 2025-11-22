@@ -1,0 +1,9 @@
+{
+    "title": "DevOps",
+    "description": "Container technologies, CI/CD, and infrastructure automation",
+    "root": true,
+    "icon": "Box",
+    "pages": [
+        "docker-fundamentals"
+    ]
+}
