@@ -1,36 +1,287 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🚀 DevOps Foundry
 
-## Getting Started
+<div align="center">
 
-First, run the development server:
+![Next.js](https://img.shields.io/badge/Next.js-16.0-black?style=for-the-badge&logo=next.js&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=for-the-badge&logo=typescript&logoColor=white)
+![TailwindCSS](https://img.shields.io/badge/Tailwind-4.0-38bdf8?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+**A modern, high-performance portfolio showcasing DevOps, SRE, and AI Engineering expertise**
+
+[View Live Demo](https://devopsfoundry.com) • [Report Bug](https://github.com/crypticseeds/devopsfoundry/issues) • [Request Feature](https://github.com/crypticseeds/devopsfoundry/issues)
+
+</div>
+
+---
+
+## ✨ Features
+
+- **🎨 Modern Design** - Clean, professional interface with dark mode support
+- **⚡ Blazing Fast** - Built with Next.js 16 and optimized for performance
+- **📱 Fully Responsive** - Seamless experience across all devices
+- **🎯 SEO Optimized** - Meta tags, semantic HTML, and structured data
+- **♿ Accessible** - WCAG compliant with keyboard navigation support
+- **🔧 Easy Customization** - Centralized content management in `src/data/content.ts`
+- **📊 Project Showcase** - Highlight your best DevOps and AI/ML projects
+- **✍️ Blog Integration** - Share technical insights and tutorials
+- **📧 Contact Form** - Integrated Cal.com scheduling for easy connections
+- **🏆 Certifications Display** - Showcase your professional achievements
+
+---
+
+## 🛠️ Tech Stack
+
+### Core Framework
+- **[Next.js 16](https://nextjs.org/)** - React framework with App Router
+- **[React 19](https://react.dev/)** - Latest React with concurrent features
+- **[TypeScript](https://www.typescriptlang.org/)** - Type-safe development
+
+### Styling & UI
+- **[Tailwind CSS 4](https://tailwindcss.com/)** - Utility-first CSS framework
+- **[Lucide React](https://lucide.dev/)** - Beautiful, consistent icons
+- **[next-themes](https://github.com/pacocoursey/next-themes)** - Dark mode support
+
+### Integrations
+- **[Cal.com](https://cal.com/)** - Embedded scheduling for contact form
+
+---
+
+## 📁 Project Structure
+
+```
+devopsfoundry/
+├── src/
+│   ├── app/                    # Next.js App Router
+│   │   ├── layout.tsx          # Root layout with theme provider
+│   │   ├── page.tsx            # Home page
+│   │   └── globals.css         # Global styles
+│   ├── components/             # React components
+│   │   ├── Header.tsx          # Navigation header
+│   │   ├── Hero.tsx            # Hero section
+│   │   ├── Skills.tsx          # Skills & certifications
+│   │   ├── Projects.tsx        # Project showcase
+│   │   ├── BlogPreview.tsx     # Blog posts preview
+│   │   ├── Contact.tsx         # Contact form with Cal.com
+│   │   ├── Footer.tsx          # Footer with social links
+│   │   └── theme-provider.tsx  # Theme context provider
+│   └── data/
+│       └── content.ts          # Centralized content configuration
+├── public/                     # Static assets
+│   ├── badges/                 # Certification badges
+│   └── Femi-Akinlotan-Resume.pdf
+├── package.json
+├── tsconfig.json
+├── tailwind.config.ts
+└── next.config.ts
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🚀 Getting Started
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Prerequisites
 
-## Learn More
+- **Node.js** 18.0 or higher
+- **npm**, **yarn**, **pnpm**, or **bun**
 
-To learn more about Next.js, take a look at the following resources:
+### Installation
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/crypticseeds/devopsfoundry.git
+   cd devopsfoundry
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+2. **Install dependencies**
+   ```bash
+   npm install
+   # or
+   yarn install
+   # or
+   pnpm install
+   # or
+   bun install
+   ```
 
-## Deploy on Vercel
+3. **Run the development server**
+   ```bash
+   npm run dev
+   # or
+   yarn dev
+   # or
+   pnpm dev
+   # or
+   bun dev
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+4. **Open your browser**
+   
+   Navigate to [http://localhost:3000](http://localhost:3000) to see the application.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## ⚙️ Configuration
+
+### Customizing Content
+
+All content is centralized in **`src/data/content.ts`** for easy updates:
+
+```typescript
+// Update hero section
+export const hero = {
+    location: "Your Location",
+    title: {
+        first: "Your Title",
+        second: "Your Subtitle"
+    },
+    description: "Your description...",
+    // ...
+}
+
+// Add/edit projects
+export const projects = [
+    {
+        title: "Project Name",
+        description: "Project description...",
+        tags: ["Tag1", "Tag2"],
+        links: {
+            github: "https://github.com/...",
+            demo: "https://...",
+            writeup: "/blog/..."
+        }
+    }
+]
+
+// Add/edit blog posts
+export const blogPosts = [
+    {
+        title: "Post Title",
+        summary: "Post summary...",
+        date: "MMM DD, YYYY",
+        tags: ["Tag1", "Tag2"],
+        slug: "post-slug"
+    }
+]
+```
+
+### Environment Variables
+
+Create a `.env.local` file for any environment-specific configuration:
+
+```env
+# Add your environment variables here
+NEXT_PUBLIC_SITE_URL=https://yourdomain.com
+```
+
+### Styling
+
+- **Global styles**: `src/app/globals.css`
+- **Tailwind config**: `tailwind.config.ts`
+- **Theme colors**: Defined in `globals.css` using CSS variables
+
+---
+
+## 📦 Build & Deploy
+
+### Production Build
+
+```bash
+npm run build
+npm run start
+```
+
+### Deploy on Vercel
+
+The easiest way to deploy is using [Vercel](https://vercel.com):
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/crypticseeds/devopsfoundry)
+
+1. Push your code to GitHub
+2. Import your repository in Vercel
+3. Vercel will automatically detect Next.js and configure the build
+4. Your site will be live in minutes!
+
+### Other Deployment Options
+
+- **[Netlify](https://www.netlify.com/)**
+- **[AWS Amplify](https://aws.amazon.com/amplify/)**
+- **[Docker](https://docs.docker.com/)** - Use the Next.js standalone output
+- **Self-hosted** - Use `npm run build && npm run start`
+
+---
+
+## 🎨 Customization Guide
+
+### Adding New Sections
+
+1. Create a new component in `src/components/`
+2. Import and add it to `src/app/page.tsx`
+3. Add corresponding data to `src/data/content.ts`
+
+### Changing Colors
+
+Edit the CSS variables in `src/app/globals.css`:
+
+```css
+:root {
+  --background: 0 0% 100%;
+  --foreground: 222.2 84% 4.9%;
+  --accent-blue: 217 91% 60%;
+  /* ... */
+}
+```
+
+### Adding Certifications
+
+1. Add badge images to `public/badges/`
+2. Update the `certifications` array in `src/data/content.ts`
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+---
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## 🙏 Acknowledgments
+
+- **[Next.js](https://nextjs.org/)** - The React Framework
+- **[Vercel](https://vercel.com/)** - Deployment platform
+- **[Tailwind CSS](https://tailwindcss.com/)** - Styling framework
+- **[Lucide](https://lucide.dev/)** - Icon library
+- **[Cal.com](https://cal.com/)** - Scheduling integration
+
+---
+
+## 📧 Contact
+
+**Femi Akinlotan** - DevOps, SRE & Platform Engineer
+
+- 🌐 Website: [devopsfoundry.com](https://devopsfoundry.com)
+- 💼 LinkedIn: [linkedin.com/in/femi-akinlotan](https://www.linkedin.com/in/femi-akinlotan/)
+- 🐙 GitHub: [@crypticseeds](https://github.com/crypticseeds)
+- 🐦 X/Twitter: [@crypticseeds](https://x.com/crypticseeds)
+
+---
+
+<div align="center">
+
+**⭐ Star this repo if you find it helpful!**
+
+Made with ❤️ by [Femi Akinlotan](https://github.com/crypticseeds)
+
+</div>
