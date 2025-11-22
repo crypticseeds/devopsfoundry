@@ -64,7 +64,7 @@ export function Header() {
                             )}
                         </div>
                         <div className={`flex flex-col justify-center transition-all duration-300 ${isScrolled ? "scale-95 origin-left" : "scale-100"}`}>
-                            <span className="text-sm font-medium text-secondary border-l border-secondary/20 pl-3 ml-3">
+                            <span className="text-sm font-medium text-foreground border-l border-foreground/20 pl-3 ml-3">
                                 Femi Akinlotan
                             </span>
                         </div>
@@ -76,7 +76,7 @@ export function Header() {
                             <Link
                                 key={link.name}
                                 href={link.href}
-                                className="text-sm font-medium text-secondary transition-colors hover:text-foreground"
+                                className="text-sm font-medium text-foreground transition-colors hover:text-accent-blue"
                             >
                                 {link.name}
                             </Link>
@@ -85,7 +85,7 @@ export function Header() {
                         {/* Theme Toggle */}
                         <button
                             onClick={toggleTheme}
-                            className="flex h-8 w-8 items-center justify-center rounded-full bg-secondary/10 text-secondary transition-colors hover:bg-secondary/20 hover:text-foreground"
+                            className="flex h-8 w-8 items-center justify-center rounded-full bg-foreground/10 text-foreground transition-colors hover:bg-accent-blue/20 hover:text-accent-blue"
                             aria-label="Toggle theme"
                         >
                             {mounted ? (
@@ -137,7 +137,7 @@ export function Header() {
                                 <Link
                                     key={link.name}
                                     href={link.href}
-                                    className="text-lg font-medium text-secondary hover:text-foreground"
+                                    className="text-lg font-medium text-foreground hover:text-accent-blue"
                                     onClick={() => setIsMobileMenuOpen(false)}
                                 >
                                     {link.name}
@@ -146,10 +146,10 @@ export function Header() {
 
                             <div className="border-t border-white/10 pt-6 mt-2">
                                 <div className="flex items-center justify-between">
-                                    <span className="text-sm font-medium text-secondary">Theme</span>
+                                    <span className="text-sm font-medium text-foreground">Theme</span>
                                     <button
                                         onClick={toggleTheme}
-                                        className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary/10 text-secondary transition-colors hover:bg-secondary/20 hover:text-foreground"
+                                        className="flex h-10 w-10 items-center justify-center rounded-full bg-foreground/10 text-foreground transition-colors hover:bg-accent-blue/20 hover:text-accent-blue"
                                     >
                                         {mounted ? (
                                             theme === "dark" ? (
