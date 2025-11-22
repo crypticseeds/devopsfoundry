@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { projectsSource } from '@/lib/sources';
+import { Breadcrumbs, createProjectBreadcrumbs } from '@/components/Breadcrumbs';
 
 interface ProjectPageProps {
     params: Promise<{ slug: string[] }>;
@@ -40,12 +41,7 @@ export default async function ProjectPage(props: ProjectPageProps) {
     return (
         <div className="min-h-screen bg-background">
             <article className="max-w-5xl mx-auto px-4 py-16">
-                <Link
-                    href="/projects"
-                    className="inline-flex items-center text-accent-blue hover:underline mb-8"
-                >
-                    ← Back to Projects
-                </Link>
+                <Breadcrumbs items={createProjectBreadcrumbs({ projectTitle: page.data.title })} />
 
                 <header className="mb-8">
                     <h1 className="text-4xl font-bold mb-4">{page.data.title}</h1>

@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { projectsSource } from '@/lib/sources';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
+import { Breadcrumbs, createProjectBreadcrumbs } from '@/components/Breadcrumbs';
 
 export default function ProjectsPage() {
     const docs = projectsSource.getPages();
@@ -11,6 +12,8 @@ export default function ProjectsPage() {
             <Header />
             <main className="flex-1 bg-secondary/5">
                 <div className="max-w-6xl mx-auto px-4 py-24 pt-32">
+                    <Breadcrumbs items={createProjectBreadcrumbs({})} />
+                    
                     <div className="mb-12 text-center">
                         <h1 className="text-4xl font-bold mb-4 md:text-5xl">Projects</h1>
                         <p className="text-secondary text-lg max-w-2xl mx-auto">
