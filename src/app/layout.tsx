@@ -4,6 +4,7 @@ import "./globals.css";
 import "katex/dist/katex.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { StatusWidget } from "@/components/StatusWidget";
+import { Background } from "@/components/Background";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -42,6 +43,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           {children}
+          <Background />
           <StatusWidget />
         </ThemeProvider>
       </body>

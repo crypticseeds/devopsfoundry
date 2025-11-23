@@ -54,23 +54,32 @@
 }
 
 html {
-  scroll-padding-top: 6rem; /* Account for fixed header height */
+  scroll-padding-top: 6rem;
+  /* Account for fixed header height */
+  scroll-behavior: smooth;
 }
 
 /* Additional scroll padding for mobile/tablet when TOC is visible */
 @media (max-width: 1279px) {
+
   /* XL breakpoint - when fumadocs shows the collapsible TOC */
   html {
     /* Header (5rem) + TOC nav (40px = 2.5rem) + small buffer (0.5rem) = 8rem */
     scroll-padding-top: 8rem;
   }
-  
+
   /* Prevent content from being obscured by sticky TOC */
-  article h1, article h2, article h3, article h4, article h5, article h6 {
+  article h1,
+  article h2,
+  article h3,
+  article h4,
+  article h5,
+  article h6 {
     scroll-margin-top: 8rem;
-    scroll-snap-margin-top: 8rem; /* For Safari compatibility */
+    scroll-snap-margin-top: 8rem;
+    /* For Safari compatibility */
   }
-  
+
   /* Also apply to any targeted element */
   :target {
     scroll-margin-top: 8rem;

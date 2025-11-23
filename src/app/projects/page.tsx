@@ -1,7 +1,5 @@
 import Link from 'next/link';
 import { projectsSource } from '@/lib/sources';
-import { Header } from '@/components/Header';
-import { Footer } from '@/components/Footer';
 import { Breadcrumbs, createProjectBreadcrumbs } from '@/components/Breadcrumbs';
 
 export default function ProjectsPage() {
@@ -9,11 +7,10 @@ export default function ProjectsPage() {
 
     return (
         <div className="flex min-h-screen flex-col bg-background font-sans text-foreground antialiased selection:bg-accent-blue/20 selection:text-accent-blue">
-            <Header />
             <main className="flex-1 bg-secondary/5">
                 <div className="max-w-6xl mx-auto px-4 py-24 pt-32">
                     <Breadcrumbs items={createProjectBreadcrumbs({})} />
-                    
+
                     <div className="mb-12 text-center">
                         <h1 className="text-4xl font-bold mb-4 md:text-5xl">Projects</h1>
                         <p className="text-secondary text-lg max-w-2xl mx-auto">
@@ -57,7 +54,6 @@ export default function ProjectsPage() {
                     )}
                 </div>
             </main>
-            <Footer />
         </div>
     );
 }
