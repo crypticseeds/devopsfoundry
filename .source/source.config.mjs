@@ -11,8 +11,8 @@ var blogs = defineDocs({
 var projects = defineDocs({
   dir: "content/docs/projects"
 });
-var tutorials = defineDocs({
-  dir: "content/docs/tutorials"
+var documentation = defineDocs({
+  dir: "content/docs/documentation"
 });
 var source_config_default = defineConfig({
   mdxOptions: {
@@ -33,6 +33,6 @@ var source_config_default = defineConfig({
 export {
   blogs,
   source_config_default as default,
-  projects,
-  tutorials
+  documentation,
+  projects
 };

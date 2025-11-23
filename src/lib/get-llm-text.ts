@@ -1,10 +1,10 @@
 import type { InferPageType } from 'fumadocs-core/source';
-import { blogSource, projectsSource, tutorialSource } from '@/lib/sources';
+import { blogSource, projectsSource, documentationSource } from '@/lib/sources';
 
-type PageType = 
+type PageType =
   | InferPageType<typeof blogSource>
   | InferPageType<typeof projectsSource>
-  | InferPageType<typeof tutorialSource>;
+  | InferPageType<typeof documentationSource>;
 
 export async function getLLMText(page: PageType) {
   const raw = await page.data.getText('raw');

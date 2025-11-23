@@ -3,14 +3,22 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
+import { usePathname } from "next/navigation";
+
 export function Background() {
     const [mounted, setMounted] = useState(false);
+    const pathname = usePathname();
 
     useEffect(() => {
         setMounted(true);
     }, []);
 
     if (!mounted) return null;
+
+    // Don't show background on documentation pages
+    if (pathname?.startsWith('/documentation')) {
+        return null;
+    }
 
     return (
         <div className="fixed inset-0 -z-50 overflow-hidden bg-background">

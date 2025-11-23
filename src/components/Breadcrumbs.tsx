@@ -14,21 +14,21 @@ interface BreadcrumbsProps {
 export function Breadcrumbs({ items }: BreadcrumbsProps) {
     return (
         <nav aria-label="Breadcrumb" className="mb-8">
-            <ol className="flex items-center gap-2 text-sm text-secondary">
+            <ol className="flex items-center gap-2 text-sm text-secondary !p-0 !m-0 list-none">
                 {items.map((item, index) => {
                     const isLast = index === items.length - 1;
-                    
+
                     return (
                         <li key={index} className="flex items-center gap-2">
                             {index > 0 && (
-                                <ChevronRight 
-                                    className="w-4 h-4 text-secondary/50" 
+                                <ChevronRight
+                                    className="w-4 h-4 text-secondary/50"
                                     aria-hidden="true"
                                 />
                             )}
-                            
+
                             {item.href && !isLast ? (
-                                <Link 
+                                <Link
                                     href={item.href}
                                     className="flex items-center gap-1.5 hover:text-accent-blue transition-colors no-underline"
                                 >
@@ -40,10 +40,9 @@ export function Breadcrumbs({ items }: BreadcrumbsProps) {
                                     <span>{item.label}</span>
                                 </Link>
                             ) : (
-                                <span 
-                                    className={`flex items-center gap-1.5 ${
-                                        isLast ? 'text-foreground font-medium' : ''
-                                    }`}
+                                <span
+                                    className={`flex items-center gap-1.5 ${isLast ? 'text-foreground font-medium' : ''
+                                        }`}
                                     aria-current={isLast ? 'page' : undefined}
                                 >
                                     {item.icon && (
