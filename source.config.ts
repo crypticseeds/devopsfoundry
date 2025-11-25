@@ -1,4 +1,4 @@
-import { defineDocs, defineConfig } from 'fumadocs-mdx/config';
+import { defineDocs, defineConfig, frontmatterSchema } from 'fumadocs-mdx/config';
 import { rehypeCodeDefaultOptions } from 'fumadocs-core/mdx-plugins';
 import { transformerTwoslash } from 'fumadocs-twoslash';
 import { remarkMdxMermaid } from 'fumadocs-core/mdx-plugins';
@@ -8,9 +8,19 @@ import remarkMath from 'remark-math';
 export const blogs = defineDocs({
     dir: 'content/docs/blogs',
 });
+import { z } from 'zod';
 
 export const projects = defineDocs({
     dir: 'content/docs/projects',
+    docs: {
+        schema: frontmatterSchema.extend({
+            banner: z.string().optional(),
+            date: z.coerce.string().optional(),
+            author: z.string().optional(),
+            project: z.string().optional(),
+            tags: z.array(z.string()).optional(),
+        }),
+    },
 });
 
 export const tutorials = defineDocs({
