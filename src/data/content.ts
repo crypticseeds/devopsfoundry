@@ -5,7 +5,7 @@ export const hero = {
         second: "Platform Engineer"
     },
     description: "Building reliable cloud-native infrastructure and scalable AI/ML workflows.",
-    aboutMe: "I am Femi Akinlotan, with 5+ years of experience. I help engineering teams ship faster and more safely by building reliable cloud-native infrastructure, automated CI/CD pipelines, and scalable AI/ML workflows.",
+    aboutMe: "I help engineering teams ship faster and more safely by building reliable cloud-native infrastructure, automated CI/CD pipelines, and scalable AI/ML workflows.",
     buttons: {
         resume: {
             text: "View Resume",
@@ -156,6 +156,7 @@ export const footer = {
     social: {
         linkedin: "https://www.linkedin.com/in/femi-akinlotan/",
         github: "https://github.com/crypticseeds",
-        x: "https://x.com/crypticseeds"
+        x: "https://x.com/crypticseeds",
+        medium: "https://medium.com/@placeholder"
     }
 }

@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { Montserrat, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import "katex/dist/katex.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { StatusWidget } from "@/components/StatusWidget";
+import { Background } from "@/components/Background";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -22,6 +24,11 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "DevOps Foundry – Femi Akinlotan – DevOps, SRE & Platform Engineer",
   description: "Portfolio of London-based DevOps, SRE, Platform and AI Engineer Femi Akinlotan. Showcasing cloud-native infrastructure, CI/CD, observability, MLOps and automation projects for modern engineering teams.",
+  icons: {
+    icon: '/logo-mark.png',
+    shortcut: '/logo-mark.png',
+    apple: '/logo-mark.png',
+  },
 };
 
 export default function RootLayout({
@@ -41,6 +48,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           {children}
+          <Background />
           <StatusWidget />
         </ThemeProvider>
       </body>

@@ -1,4 +1,7 @@
 @import "tailwindcss";
+@import "fumadocs-ui/css/neutral.css";
+@import "fumadocs-ui/css/preset.css";
+@import "fumadocs-twoslash/twoslash.css";
 
 @theme {
   --font-montserrat: var(--font-montserrat);
@@ -50,6 +53,40 @@
   --foreground: #e2e8f0;
 }
 
+html {
+  scroll-padding-top: 6rem;
+  /* Account for fixed header height */
+  scroll-behavior: smooth;
+}
+
+/* Additional scroll padding for mobile/tablet when TOC is visible */
+@media (max-width: 1279px) {
+
+  /* XL breakpoint - when fumadocs shows the collapsible TOC */
+  html {
+    /* Header (5rem) + TOC nav (40px = 2.5rem) + small buffer (0.5rem) = 8rem */
+    scroll-padding-top: 8rem;
+  }
+
+  /* Prevent content from being obscured by sticky TOC */
+  article h1,
+  article h2,
+  article h3,
+  article h4,
+  article h5,
+  article h6 {
+    scroll-margin-top: 8rem;
+    scroll-snap-margin-top: 8rem;
+    /* For Safari compatibility */
+  }
+
+  /* Also apply to any targeted element */
+  :target {
+    scroll-margin-top: 8rem;
+    scroll-snap-margin-top: 8rem;
+  }
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
@@ -68,4 +105,40 @@ h6 {
 code,
 pre {
   font-family: var(--font-jetbrains-mono), monospace;
+}
+
+/* Fumadocs Customization - Blue Accent Color */
+:root {
+  --fd-primary: 59 130 246;
+  /* #3b82f6 - matches accent-blue */
+}
+
+.dark {
+  --fd-primary: 96 165 250;
+  /* Lighter blue for dark mode */
+}
+
+/* Make sidebar tab titles (category names) bolder */
+[data-sidebar-tabs] button {
+  font-weight: 600;
+}
+
+/* Ensure icons are visible and aligned */
+[data-sidebar-tabs] button svg {
+  opacity: 0.9;
+}
+
+/* Set nav height for Fumadocs layout spacing */
+:root {
+  --fd-nav-height: 5rem;
+}
+
+/* Remove underlines from all links globally */
+a {
+  text-decoration: none;
+}
+
+a:hover,
+a:focus {
+  text-decoration: none;
 }

@@ -55,7 +55,7 @@ export function Terminal({ className, commands = [] }: TerminalProps) {
             {/* Terminal Body */}
             <div
                 ref={containerRef}
-                className="p-4 h-64 overflow-y-auto text-white/80 space-y-2 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent"
+                className="p-4 h-auto min-h-[150px] overflow-y-auto text-white/80 space-y-2 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent"
             >
                 {lines.map((line, i) => (
                     <motion.div
