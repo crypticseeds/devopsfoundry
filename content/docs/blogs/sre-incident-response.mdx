@@ -1,0 +1,224 @@
+---
+title: Building an Effective SRE Incident Response Process
+description: Learn how to create a robust incident response framework that minimizes downtime and improves team coordination
+date: 2024-11-15
+author: Femi Akinlotan
+tags: [sre, incident-response, observability, on-call]
+---
+
+# Building an Effective SRE Incident Response Process
+
+When production goes down at 3 AM, having a well-defined incident response process is the difference between a 15-minute recovery and a multi-hour outage. Here's how to build a world-class incident response framework.
+
+## The Five Phases of Incident Response
+
+1. **Detection**: Identify issues before users report them
+2. **Response**: Mobilize the right people quickly
+3. **Mitigation**: Stop the bleeding
+4. **Resolution**: Fix the root cause
+5. **Post-Incident**: Learn and improve
+
+## Detection: Know Before Your Users Do
+
+### Implement Comprehensive Monitoring
+
+```yaml
+# Prometheus alerting rules
+groups:
+- name: api_alerts
+  rules:
+  - alert: HighErrorRate
+    expr: |
+      sum(rate(http_requests_total{status=~"5.."}[5m])) by (service)
+      /
+      sum(rate(http_requests_total[5m])) by (service)
+      > 0.05
+    for: 2m
+    labels:
+      severity: critical
+    annotations:
+      summary: "High error rate on {{ $labels.service }}"
+      description: "Error rate is {{ $value | humanizePercentage }}"
+```
+
+### Set Up Synthetic Monitoring
+
+Don't wait for real users to discover issues:
+
+```python
+import requests
+from prometheus_client import Gauge
+
+uptime = Gauge('service_uptime', 'Service availability', ['endpoint'])
+
+def check_health():
+    endpoints = [
+        'https://api.example.com/health',
+        'https://api.example.com/auth/health',
+        'https://api.example.com/orders/health'
+    ]
+    
+    for endpoint in endpoints:
+        try:
+            response = requests.get(endpoint, timeout=5)
+            uptime.labels(endpoint=endpoint).set(
+                1 if response.status_code == 200 else 0
+            )
+        except Exception:
+            uptime.labels(endpoint=endpoint).set(0)
+```
+
+## Response: The First 5 Minutes
+
+### Create Clear Escalation Paths
+
+```yaml
+# PagerDuty escalation policy
+escalation_policy:
+  - level: 1
+    targets:
+      - on_call_engineer
+    timeout: 5m
+  
+  - level: 2
+    targets:
+      - on_call_engineer
+      - team_lead
+    timeout: 10m
+  
+  - level: 3
+    targets:
+      - on_call_engineer
+      - team_lead
+      - engineering_manager
+    timeout: 15m
+```
+
+### Incident Communication Template
+
+```markdown
+## Incident #12345 - API Gateway Outage
+
+**Status**: INVESTIGATING  
+**Started**: 2024-11-15 03:15 UTC  
+**Severity**: P1 (Critical)  
+**Impact**: 100% of API requests failing  
+**Incident Commander**: @jane-doe  
+
+**Current Actions**:
+- Rolled back deployment from 03:10 UTC
+- Investigating database connection pool exhaustion
+- Customer support team notified
+
+**Next Update**: 03:45 UTC
+```
+
+## Mitigation: Stop the Bleeding
+
+### Runbooks for Common Issues
+
+Create automated runbooks:
+
+```yaml
+# Kubernetes runbook for pod restart
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: incident-runbooks
+data:
+  high-memory-usage.sh: |
+    #!/bin/bash
+    # Check memory usage
+    kubectl top pods -n production | grep -v NAME | while read line; do
+      pod=$(echo $line | awk '{print $1}')
+      memory=$(echo $line | awk '{print $3}')
+      if [[ ${memory%Mi} -gt 2000 ]]; then
+        echo "Restarting high-memory pod: $pod"
+        kubectl delete pod $pod -n production
+      fi
+    done
+```
+
+### Circuit Breaker Pattern
+
+Prevent cascading failures:
+
+```python
+from pybreaker import CircuitBreaker
+
+# Configure circuit breaker
+db_breaker = CircuitBreaker(
+    fail_max=5,
+    timeout_duration=60,
+    exclude=[ValueError]
+)
+
+@db_breaker
+def query_database(query):
+    # Database call that might fail
+    return db.execute(query)
+```
+
+## Post-Incident Review
+
+### Blameless Postmortem Template
+
+```markdown
+# Postmortem: API Gateway Outage (2024-11-15)
+
+## Summary
+API Gateway experienced complete outage for 23 minutes due to database connection pool exhaustion.
+
+## Impact
+- **Duration**: 23 minutes
+- **Users Affected**: 100% of API users
+- **Revenue Impact**: ~$15,000
+
+## Timeline
+- 03:10 - New deployment rolled out
+- 03:15 - First alerts fired
+- 03:18 - Incident declared P1
+- 03:25 - Rollback initiated
+- 03:33 - Service restored
+
+## Root Cause
+Connection pool size was not increased to match new deployment's connection requirements.
+
+## What Went Well
+- Alert fired within 5 minutes
+- Team responded quickly
+- Rollback process worked smoothly
+
+## What Went Wrong
+- No load testing of new connection requirements
+- Connection pool monitoring was not in place
+- Deployment process didn't catch the issue
+
+## Action Items
+1. [ ] Add connection pool monitoring (Owner: @john, Due: 2024-11-20)
+2. [ ] Implement load testing in CI/CD (Owner: @sarah, Due: 2024-11-25)
+3. [ ] Review all service connection configs (Owner: @mike, Due: 2024-11-22)
+```
+
+## Key Metrics to Track
+
+- **MTTD** (Mean Time to Detect): How fast do you know?
+- **MTTR** (Mean Time to Resolve): How fast do you fix it?
+- **Incident Frequency**: Are you improving over time?
+- **SLA/SLO Compliance**: Are you meeting commitments?
+
+## On-Call Best Practices
+
+1. **Limit on-call shifts**: 1 week maximum
+2. **Provide adequate compensation**: Time off or pay
+3. **Share the load**: Rotate fairly across the team
+4. **Document everything**: No tribal knowledge
+5. **Review on-call metrics**: Identify and fix patterns
+
+## Conclusion
+
+A robust incident response process turns chaos into coordinated action. Invest in detection, practice your response, and always learn from incidents. Your 3 AM self will thank you.
+
+---
+
+*How does your team handle incidents? Share your experiences!*
