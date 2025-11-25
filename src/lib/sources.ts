@@ -1,4 +1,4 @@
-import { blogs, projects, documentation } from 'fumadocs-mdx:collections/server';
+import { blogs, projects, documentation, tutorials } from 'fumadocs-mdx:collections/server';
 import { loader } from 'fumadocs-core/source';
 
 export const blogSource = loader({
@@ -14,4 +14,9 @@ export const projectsSource = loader({
 export const documentationSource = loader({
     baseUrl: '/documentation',
     source: documentation.toFumadocsSource(),
+});
+
+export const tutorialSource = loader({
+    baseUrl: '/tutorials',
+    source: tutorials.toFumadocsSource(),
 });

@@ -9,7 +9,7 @@
 
 **A modern, high-performance portfolio showcasing DevOps, SRE, and AI Engineering expertise**
 
-[View Live Demo](https://devopsfoundry.com) • [Report Bug](https://github.com/crypticseeds/devopsfoundry/issues) • [Request Feature](https://github.com/crypticseeds/devopsfoundry/issues)
+[View Live Demo](https://devopsfoundry.com) • [Report Bug](https://github.com/crypticseeds/devopsfoundry/issues) • [Request Feature](https://github.com/crypticseeds/devopsfoundry/issues) • [📋 Linear Project](https://linear.app/devopsfoundry/project/portfolio-site-97fb782a9c1d)
 
 </div>
 

@@ -1,5 +1,5 @@
 import { getLLMText } from '@/lib/get-llm-text';
-import { blogSource, projectsSource, documentationSource } from '@/lib/sources';
+import { blogSource, projectsSource, tutorialSource, documentationSource } from '@/lib/sources';
 import { notFound } from 'next/navigation';
 
 export const revalidate = false;
@@ -17,10 +17,11 @@ function findPageBySlug(slug?: string[]) {
     const allPages = [
         ...blogSource.getPages(),
         ...projectsSource.getPages(),
+        ...tutorialSource.getPages(),
         ...documentationSource.getPages(),
     ];
 
-    return allPages.find((page) => page.url === `/${slugStr}`);
+    return allPages.find(page => page.slugs.join('/') === slugStr);
 }
 
 export async function GET(
@@ -43,6 +44,7 @@ export function generateStaticParams() {
     return [
         ...blogSource.getPages().map((page) => ({ slug: page.slugs })),
         ...projectsSource.getPages().map((page) => ({ slug: page.slugs })),
+        ...tutorialSource.getPages().map((page) => ({ slug: page.slugs })),
         ...documentationSource.getPages().map((page) => ({ slug: page.slugs })),
     ];
 }

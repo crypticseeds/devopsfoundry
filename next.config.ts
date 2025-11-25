@@ -15,7 +15,7 @@ const nextConfig: NextConfig = {
         destination: '/llms.mdx/:path*',
       },
       {
-        source: '/documentation/:path*.mdx',
+        source: '/tutorials/:path*.mdx',
         destination: '/llms.mdx/:path*',
       },
     ];

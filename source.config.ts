@@ -13,6 +13,10 @@ export const projects = defineDocs({
     dir: 'content/docs/projects',
 });
 
+export const tutorials = defineDocs({
+    dir: 'content/docs/tutorials',
+});
+
 export const documentation = defineDocs({
     dir: 'content/docs/documentation',
 });

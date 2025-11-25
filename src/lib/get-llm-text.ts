@@ -1,9 +1,10 @@
 import type { InferPageType } from 'fumadocs-core/source';
-import { blogSource, projectsSource, documentationSource } from '@/lib/sources';
+import { blogSource, projectsSource, tutorialSource, documentationSource } from '@/lib/sources';
 
 type PageType =
   | InferPageType<typeof blogSource>
   | InferPageType<typeof projectsSource>
+  | InferPageType<typeof tutorialSource>
   | InferPageType<typeof documentationSource>;
 
 export async function getLLMText(page: PageType) {

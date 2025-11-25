@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { documentationSource } from '@/lib/sources';
+import { tutorialSource } from '@/lib/sources';
 import { DocsPage, DocsBody } from 'fumadocs-ui/page';
 import { LLMCopyButton } from '@/components/ai/llm-copy-button';
 import { ViewOptions } from '@/components/ai/view-options';
@@ -10,14 +10,14 @@ interface TutorialPageProps {
 }
 
 export async function generateStaticParams() {
-    return documentationSource.getPages().map((page) => ({
+    return tutorialSource.getPages().map((page) => ({
         slug: page.slugs,
     }));
 }
 
 export async function generateMetadata(props: TutorialPageProps): Promise<Metadata> {
     const params = await props.params;
-    const page = documentationSource.getPage(params.slug);
+    const page = tutorialSource.getPage(params.slug);
 
     if (!page) {
         return {};
@@ -31,7 +31,7 @@ export async function generateMetadata(props: TutorialPageProps): Promise<Metada
 
 export default async function TutorialPage(props: TutorialPageProps) {
     const params = await props.params;
-    const page = documentationSource.getPage(params.slug);
+    const page = tutorialSource.getPage(params.slug);
 
     if (!page) {
         notFound();
@@ -40,7 +40,7 @@ export default async function TutorialPage(props: TutorialPageProps) {
     const MDX = page.data.body;
 
     return (
-        <DocsPage toc={page.data.toc} tableOfContent={{ style: 'clerk', enabled: true }} footer={{ enabled: false }}>
+        <DocsPage toc={page.data.toc} tableOfContent={{ style: 'clerk' }} footer={{ enabled: false }}>
             <DocsBody>
                 <h1>{page.data.title}</h1>
                 {page.data.description && (
@@ -53,7 +53,7 @@ export default async function TutorialPage(props: TutorialPageProps) {
                     <LLMCopyButton markdownUrl={`/llms.mdx/${page.slugs.join('/')}`} />
                     <ViewOptions
                         markdownUrl={`/llms.mdx/${page.slugs.join('/')}`}
-                        githubUrl={`https://github.com/crypticseeds/devopsfoundry/blob/main/content/docs/documentation/${page.slugs.join('/')}.mdx`}
+                        githubUrl={`https://github.com/crypticseeds/devopsfoundry/blob/main/content/docs/tutorials/${page.slugs.join('/')}.mdx`}
                     />
                 </div>
 
