@@ -1,8 +1,6 @@
 {
     "title": "Linux",
     "description": "Shell scripting and system administration",
-    "root": true,
-    "icon": "Terminal",
     "pages": [
         "advanced-bash-scripting"
     ]
