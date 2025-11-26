@@ -1,0 +1,52 @@
+name: Link Checker
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    # Run weekly on Sundays at 00:00 UTC
+    - cron: '0 0 * * 0'
+  workflow_dispatch: # Allow manual triggering
+
+jobs:
+  link-checker:
+    name: Check Links
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Link Checker
+        id: lychee
+        uses: lycheeverse/lychee-action@v2
+        with:
+          # Check all markdown and MDX files
+          args: >
+            --verbose
+            --no-progress
+            --accept 100..=103,200..=299,403,429
+            --exclude-mail
+            --exclude "^https://linkedin.com"
+            --exclude "^https://www.linkedin.com"
+            --exclude "^https://x.com"
+            --exclude "^https://twitter.com"
+            --exclude "localhost"
+            --exclude "127.0.0.1"
+            --exclude "example.com"
+            './**/*.md'
+            './**/*.mdx'
+          fail: true
+          # Use GitHub token to avoid rate limiting
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Issue on Failure
+        if: failure() && github.event_name == 'schedule'
+        uses: peter-evans/create-issue-from-file@v5
+        with:
+          title: 🔗 Broken Links Found
+          content-filepath: ./lychee/out.md
+          labels: documentation,bug
+
