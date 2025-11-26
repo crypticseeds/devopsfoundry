@@ -237,6 +237,41 @@ Edit the CSS variables in `src/app/globals.css`:
 1. Add badge images to `public/badges/`
 2. Update the `certifications` array in `src/data/content.ts`
 
+### Adding a Featured Project
+
+To add a new project to the **Featured Projects** section on the homepage:
+
+1. Add your project banner image to `public/projects/`
+2. Add a new object to the `projects` array in `src/data/content.ts`:
+
+```typescript
+{
+    title: "Project Name",
+    description: "Short description of your project...",
+    tags: ["Tag1", "Tag2", "Tag3"],
+    image: "/projects/your-project-image.png",
+    date: "Mon YYYY",
+    links: {
+        github: "https://github.com/...",
+        demo: "https://...",       // or null if no demo
+        writeup: "/projects/...",  // or null if no case study
+    },
+}
+```
+
+| Field | Description |
+|-------|-------------|
+| `title` | Project name |
+| `description` | Short description (2-3 sentences) |
+| `tags` | Array of technology tags |
+| `image` | Banner image path (in `/public/projects/`) |
+| `date` | Display date (e.g., "Jan 2024") |
+| `links.github` | GitHub repository URL |
+| `links.demo` | Live demo URL (or `null`) |
+| `links.writeup` | Case study/blog post link (or `null`) |
+
+> **Note:** Featured Projects are separate from the Projects page. The Projects page (`/projects`) automatically reads from MDX files in `content/docs/projects/`.
+
 ---
 
 ## 🤝 Contributing

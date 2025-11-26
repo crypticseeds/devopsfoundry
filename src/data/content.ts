@@ -98,6 +98,8 @@ export const projects = [
         title: "Kubernetes Auto-Scaler",
         description: "An intelligent auto-scaling operator for K8s clusters that optimizes cost and performance using custom metrics.",
         tags: ["Go", "Kubernetes", "Prometheus", "AWS"],
+        image: "/projects/k8s-autoscaler.png",
+        date: "Jan 2024",
         links: {
             github: "https://github.com",
             demo: "https://example.com",
@@ -108,6 +110,8 @@ export const projects = [
         title: "LLM RAG Pipeline",
         description: "Production-ready RAG pipeline for enterprise documentation, featuring semantic search and hallucination checks.",
         tags: ["Python", "LangChain", "Pinecone", "FastAPI"],
+        image: "/projects/llm-rag-pipeline.png",
+        date: "Feb 2024",
         links: {
             github: "https://github.com",
             demo: "https://example.com",
@@ -118,6 +122,8 @@ export const projects = [
         title: "Multi-Cloud Terraform Modules",
         description: "A suite of reusable, compliant Terraform modules for deploying secure infrastructure across AWS and Azure.",
         tags: ["Terraform", "HCL", "Azure", "AWS"],
+        image: "/projects/terraform-multicloud.png",
+        date: "Mar 2024",
         links: {
             github: "https://github.com",
             demo: null,

@@ -1,46 +1,82 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { projectsSource } from '@/lib/sources';
 import { Breadcrumbs, createProjectBreadcrumbs } from '@/components/Breadcrumbs';
+import { ExternalLink, Github, BookOpen } from "lucide-react";
 
 export default function ProjectsPage() {
     const docs = projectsSource.getPages();
 
     return (
-        <main className="flex-1 bg-secondary/5">
-            <div className="max-w-6xl mx-auto px-4 py-24 pt-32">
+        <main className="flex-1 bg-background">
+            <div className="max-w-6xl mx-auto px-6 py-24 pt-32">
                 <Breadcrumbs items={createProjectBreadcrumbs({})} />
 
-                <div className="mb-12 text-center">
+                <div className="mb-16 text-center">
                     <h1 className="text-4xl font-bold mb-4 md:text-5xl">Projects</h1>
                     <p className="text-secondary text-lg max-w-2xl mx-auto">
-                        In-depth technical documentation for projects and systems
+                        In-depth technical documentation of my projects.
                     </p>
                 </div>
 
-                <div className="grid gap-8 md:grid-cols-2">
+                <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
                     {docs.map((doc) => (
                         <Link
                             key={doc.url}
                             href={doc.url}
-                            className="group block p-8 rounded-2xl border border-secondary/20 bg-background shadow-sm transition-all hover:-translate-y-1 hover:border-foreground/20 hover:shadow-md"
+                            className="group flex flex-col rounded-2xl border border-border bg-card overflow-hidden transition-all hover:shadow-lg"
                         >
-                            <h2 className="text-2xl font-semibold mb-3 group-hover:text-accent-blue transition-colors">
-                                {doc.data.title}
-                            </h2>
-                            {doc.data.description && (
-                                <p className="text-secondary mb-4 line-clamp-3">
-                                    {doc.data.description}
-                                </p>
-                            )}
-                            <div className="flex flex-wrap gap-2 mt-4">
-                                {(doc.data as any).tags && (doc.data as any).tags.slice(0, 3).map((tag: string) => (
-                                    <span
-                                        key={tag}
-                                        className="text-xs px-2 py-1 rounded-md bg-secondary/10 text-secondary font-medium"
-                                    >
-                                        {tag}
-                                    </span>
-                                ))}
+                            {/* Image Banner */}
+                            <div className="relative h-48 w-full overflow-hidden bg-muted">
+                                {(doc.data as any).banner ? (
+                                    <Image
+                                        src={(doc.data as any).banner as string}
+                                        alt={doc.data.title}
+                                        fill
+                                        className="object-cover transition-transform duration-500 group-hover:scale-105"
+                                    />
+                                ) : (
+                                    <div className="flex h-full w-full items-center justify-center bg-secondary/10">
+                                        <BookOpen className="h-12 w-12 text-secondary/50" />
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Content */}
+                            <div className="flex flex-1 flex-col p-6">
+                                {/* Meta Data */}
+                                <div className="mb-3 flex items-center gap-2 text-xs font-medium text-muted-foreground">
+                                    <span>{(doc.data as any).author || 'Femi Akinlotan'}</span>
+                                    {(doc.data as any).date && (
+                                        <>
+                                            <span>•</span>
+                                            <span>{new Date((doc.data as any).date).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</span>
+                                        </>
+                                    )}
+                                </div>
+
+                                <h2 className="mb-2 text-xl font-bold tracking-tight text-card-foreground transition-colors group-hover:text-accent-blue">
+                                    {doc.data.title}
+                                </h2>
+
+                                {doc.data.description && (
+                                    <p className="mb-6 text-sm leading-relaxed text-muted-foreground line-clamp-3">
+                                        {doc.data.description}
+                                    </p>
+                                )}
+
+                                <div className="mt-auto">
+                                    <div className="flex flex-wrap gap-2">
+                                        {(doc.data as any).tags && (doc.data as any).tags.slice(0, 3).map((tag: string) => (
+                                            <span
+                                                key={tag}
+                                                className="inline-flex items-center rounded-full border border-secondary/20 bg-secondary/5 px-2.5 py-0.5 text-[10px] font-medium text-secondary transition-colors hover:border-secondary/40 hover:text-foreground hover:bg-secondary/10"
+                                            >
+                                                {tag}
+                                            </span>
+                                        ))}
+                                    </div>
+                                </div>
                             </div>
                         </Link>
                     ))}
