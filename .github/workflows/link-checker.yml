@@ -28,7 +28,7 @@ jobs:
             --verbose
             --no-progress
             --accept 100..=103,200..=299,403,429
-            --exclude-mail
+            --exclude "^mailto:"
             --exclude "^https://linkedin.com"
             --exclude "^https://www.linkedin.com"
             --exclude "^https://x.com"

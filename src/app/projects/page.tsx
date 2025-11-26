@@ -31,7 +31,8 @@ export default function ProjectsPage() {
 
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
           {docs.map((doc) => {
-            const frontmatter = doc.data as typeof doc.data & ProjectFrontmatter;
+            const frontmatter = doc.data as typeof doc.data &
+              ProjectFrontmatter;
             return (
               <Link
                 key={doc.url}

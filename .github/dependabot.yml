@@ -70,4 +70,3 @@ updates:
       github-actions:
         patterns:
           - "*"
-

@@ -32,7 +32,9 @@ export function Contact() {
           transition={{ duration: 0.5 }}
           className="mb-12 text-center"
         >
-          <h2 className="mb-4 text-3xl font-bold md:text-4xl">Let&apos;s Talk</h2>
+          <h2 className="mb-4 text-3xl font-bold md:text-4xl">
+            Let&apos;s Talk
+          </h2>
           <p className="text-secondary">
             Interested in working together? Have a question? Send me a message
             and I&apos;ll get back to you.
@@ -60,8 +62,8 @@ export function Contact() {
                 </div>
                 <h3 className="mb-2 text-xl font-bold">Message Sent!</h3>
                 <p className="text-secondary">
-                  Thanks for reaching out. I&apos;ll check my inbox and get back to
-                  you shortly.
+                  Thanks for reaching out. I&apos;ll check my inbox and get back
+                  to you shortly.
                 </p>
                 <button
                   onClick={() => setIsSuccess(false)}
