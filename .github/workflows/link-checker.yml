@@ -7,7 +7,7 @@ on:
     branches: [main]
   schedule:
     # Run weekly on Sundays at 00:00 UTC
-    - cron: '0 0 * * 0'
+    - cron: "0 0 * * 0"
   workflow_dispatch: # Allow manual triggering
 
 jobs:
@@ -36,6 +36,7 @@ jobs:
             --exclude "localhost"
             --exclude "127.0.0.1"
             --exclude "example.com"
+            --exclude "https://github.com/username/repo"
             './**/*.md'
             './**/*.mdx'
           fail: true
@@ -49,4 +50,3 @@ jobs:
           title: 🔗 Broken Links Found
           content-filepath: ./lychee/out.md
           labels: documentation,bug
-
