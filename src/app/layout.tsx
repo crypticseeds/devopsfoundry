@@ -23,11 +23,12 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: "DevOps Foundry – Femi Akinlotan – DevOps, SRE & Platform Engineer",
-  description: "Portfolio of London-based DevOps, SRE, Platform and AI Engineer Femi Akinlotan. Showcasing cloud-native infrastructure, CI/CD, observability, MLOps and automation projects for modern engineering teams.",
+  description:
+    "Portfolio of London-based DevOps, SRE, Platform and AI Engineer Femi Akinlotan. Showcasing cloud-native infrastructure, CI/CD, observability, MLOps and automation projects for modern engineering teams.",
   icons: {
-    icon: '/logo-mark.png',
-    shortcut: '/logo-mark.png',
-    apple: '/logo-mark.png',
+    icon: "/logo-mark.png",
+    shortcut: "/logo-mark.png",
+    apple: "/logo-mark.png",
   },
 };
 

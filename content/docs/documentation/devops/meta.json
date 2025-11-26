@@ -1,7 +1,5 @@
 {
-    "title": "DevOps",
-    "description": "Container technologies, CI/CD, and infrastructure automation",
-    "pages": [
-        "docker-fundamentals"
-    ]
+  "title": "DevOps",
+  "description": "Container technologies, CI/CD, and infrastructure automation",
+  "pages": ["docker-fundamentals"]
 }

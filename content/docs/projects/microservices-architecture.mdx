@@ -59,28 +59,29 @@ spec:
         version: v1.2.0
     spec:
       containers:
-      - name: product-service
-        image: gcr.io/my-project/product-service:v1.2.0
-        ports:
-        - containerPort: 8080
-        resources:
-          requests:
-            memory: "256Mi"
-            cpu: "250m"
-          limits:
-            memory: "512Mi"
-            cpu: "500m"
-        env:
-        - name: DATABASE_URL
-          valueFrom:
-            secretKeyRef:
-              name: product-db-secret
-              key: connection-string
+        - name: product-service
+          image: gcr.io/my-project/product-service:v1.2.0
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: product-db-secret
+                  key: connection-string
 ```
 
 ### Service Communication
 
 Services communicate using:
+
 - **Synchronous**: REST APIs for real-time requests
 - **Asynchronous**: Kafka for event-driven communication
 
@@ -121,6 +122,7 @@ All deployments are managed declaratively using ArgoCD:
 ### Zero-Downtime Deployments
 
 Using rolling updates with:
+
 - Readiness probes to ensure service health
 - Pod Disruption Budgets to maintain availability
 - Blue-green deployments for database migrations
@@ -156,12 +158,12 @@ spec:
   minReplicas: 3
   maxReplicas: 20
   metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      target:
-        type: Utilization
-        averageUtilization: 70
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
 ```
 
 ## Challenges and Solutions

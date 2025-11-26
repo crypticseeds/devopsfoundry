@@ -1,64 +1,70 @@
-import type { Metadata } from 'next';
-import { notFound } from 'next/navigation';
-import { documentationSource } from '@/lib/sources';
-import { DocsPage, DocsBody } from 'fumadocs-ui/page';
-import { LLMCopyButton } from '@/components/ai/llm-copy-button';
-import { ViewOptions } from '@/components/ai/view-options';
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { documentationSource } from "@/lib/sources";
+import { DocsPage, DocsBody } from "fumadocs-ui/page";
+import { LLMCopyButton } from "@/components/ai/llm-copy-button";
+import { ViewOptions } from "@/components/ai/view-options";
 
 interface TutorialPageProps {
-    params: Promise<{ slug?: string[] }>;
+  params: Promise<{ slug?: string[] }>;
 }
 
 export async function generateStaticParams() {
-    return documentationSource.getPages().map((page) => ({
-        slug: page.slugs,
-    }));
+  return documentationSource.getPages().map((page) => ({
+    slug: page.slugs,
+  }));
 }
 
-export async function generateMetadata(props: TutorialPageProps): Promise<Metadata> {
-    const params = await props.params;
-    const page = documentationSource.getPage(params.slug);
+export async function generateMetadata(
+  props: TutorialPageProps,
+): Promise<Metadata> {
+  const params = await props.params;
+  const page = documentationSource.getPage(params.slug);
 
-    if (!page) {
-        return {};
-    }
+  if (!page) {
+    return {};
+  }
 
-    return {
-        title: page.data.title,
-        description: page.data.description,
-    };
+  return {
+    title: page.data.title,
+    description: page.data.description,
+  };
 }
 
 export default async function TutorialPage(props: TutorialPageProps) {
-    const params = await props.params;
-    const page = documentationSource.getPage(params.slug);
+  const params = await props.params;
+  const page = documentationSource.getPage(params.slug);
 
-    if (!page) {
-        notFound();
-    }
+  if (!page) {
+    notFound();
+  }
 
-    const MDX = page.data.body;
+  const MDX = page.data.body;
 
-    return (
-        <DocsPage toc={page.data.toc} tableOfContent={{ style: 'clerk', enabled: true }} footer={{ enabled: false }}>
-            <DocsBody>
-                <h1>{page.data.title}</h1>
-                {page.data.description && (
-                    <p className="text-lg text-muted-foreground mb-8">
-                        {page.data.description}
-                    </p>
-                )}
+  return (
+    <DocsPage
+      toc={page.data.toc}
+      tableOfContent={{ style: "clerk", enabled: true }}
+      footer={{ enabled: false }}
+    >
+      <DocsBody>
+        <h1>{page.data.title}</h1>
+        {page.data.description && (
+          <p className="text-lg text-muted-foreground mb-8">
+            {page.data.description}
+          </p>
+        )}
 
-                <div className="flex flex-row gap-2 items-center border-b pt-2 pb-6 mb-6">
-                    <LLMCopyButton markdownUrl={`/llms.mdx/${page.slugs.join('/')}`} />
-                    <ViewOptions
-                        markdownUrl={`/llms.mdx/${page.slugs.join('/')}`}
-                        githubUrl={`https://github.com/crypticseeds/devopsfoundry/blob/main/content/docs/documentation/${page.slugs.join('/')}.mdx`}
-                    />
-                </div>
+        <div className="flex flex-row gap-2 items-center border-b pt-2 pb-6 mb-6">
+          <LLMCopyButton markdownUrl={`/llms.mdx/${page.slugs.join("/")}`} />
+          <ViewOptions
+            markdownUrl={`/llms.mdx/${page.slugs.join("/")}`}
+            githubUrl={`https://github.com/crypticseeds/devopsfoundry/blob/main/content/docs/documentation/${page.slugs.join("/")}.mdx`}
+          />
+        </div>
 
-                <MDX />
-            </DocsBody>
-        </DocsPage>
-    );
+        <MDX />
+      </DocsBody>
+    </DocsPage>
+  );
 }

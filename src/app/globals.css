@@ -61,7 +61,6 @@ html {
 
 /* Additional scroll padding for mobile/tablet when TOC is visible */
 @media (max-width: 1279px) {
-
   /* XL breakpoint - when fumadocs shows the collapsible TOC */
   html {
     /* Header (5rem) + TOC nav (40px = 2.5rem) + small buffer (0.5rem) = 8rem */

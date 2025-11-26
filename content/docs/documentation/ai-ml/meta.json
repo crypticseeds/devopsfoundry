@@ -1,7 +1,5 @@
 {
-    "title": "AI/ML",
-    "description": "Machine learning deployment and MLOps",
-    "pages": [
-        "fastapi-ml-deployment"
-    ]
+  "title": "AI/ML",
+  "description": "Machine learning deployment and MLOps",
+  "pages": ["fastapi-ml-deployment"]
 }

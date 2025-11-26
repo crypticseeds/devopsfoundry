@@ -92,6 +92,7 @@ docker run -d -p 8080:80 --name my-nginx nginx:latest
 ```
 
 Breaking down this command:
+
 - `docker run`: Creates and starts a container
 - `-d`: Runs in detached mode (background)
 - `-p 8080:80`: Maps port 8080 on host to port 80 in container
@@ -152,6 +153,7 @@ docker image prune
 Let's create a simple Python web application and containerize it.
 
 **app.py**:
+
 ```python
 from flask import Flask
 app = Flask(__name__)
@@ -165,11 +167,13 @@ if __name__ == '__main__':
 ```
 
 **requirements.txt**:
+
 ```text
 Flask==3.0.0
 ```
 
 **Dockerfile**:
+
 ```dockerfile
 # Use official Python runtime as base image
 FROM python:3.11-slim
@@ -214,8 +218,9 @@ curl http://localhost:5000
 Docker Compose allows you to define and run multi-container applications.
 
 **docker-compose.yml**:
+
 ```yaml
-version: '3.8'
+version: "3.8"
 
 services:
   web:
@@ -228,7 +233,7 @@ services:
       - .:/app
     depends_on:
       - redis
-  
+
   redis:
     image: redis:7-alpine
     ports:
@@ -307,6 +312,7 @@ USER appuser
 **Problem**: `Got permission denied while trying to connect to the Docker daemon socket`
 
 **Solution**: Add your user to the docker group:
+
 ```bash
 sudo usermod -aG docker $USER
 # Log out and back in for changes to take effect
@@ -317,6 +323,7 @@ sudo usermod -aG docker $USER
 **Problem**: `Bind for 0.0.0.0:8080 failed: port is already allocated`
 
 **Solution**: Either stop the process using that port or use a different port:
+
 ```bash
 docker run -p 8081:80 nginx
 ```
@@ -326,6 +333,7 @@ docker run -p 8081:80 nginx
 **Problem**: Container stops right after starting
 
 **Solution**: Check logs for errors:
+
 ```bash
 docker logs <container-name>
 ```

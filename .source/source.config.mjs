@@ -1,5 +1,9 @@
 // source.config.ts
-import { defineDocs, defineConfig, frontmatterSchema } from "fumadocs-mdx/config";
+import {
+  defineDocs,
+  defineConfig,
+  frontmatterSchema
+} from "fumadocs-mdx/config";
 import { rehypeCodeDefaultOptions } from "fumadocs-core/mdx-plugins";
 import { transformerTwoslash } from "fumadocs-twoslash";
 import { remarkMdxMermaid } from "fumadocs-core/mdx-plugins";

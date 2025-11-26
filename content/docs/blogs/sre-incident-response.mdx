@@ -25,20 +25,20 @@ When production goes down at 3 AM, having a well-defined incident response proce
 ```yaml
 # Prometheus alerting rules
 groups:
-- name: api_alerts
-  rules:
-  - alert: HighErrorRate
-    expr: |
-      sum(rate(http_requests_total{status=~"5.."}[5m])) by (service)
-      /
-      sum(rate(http_requests_total[5m])) by (service)
-      > 0.05
-    for: 2m
-    labels:
-      severity: critical
-    annotations:
-      summary: "High error rate on {{ $labels.service }}"
-      description: "Error rate is {{ $value | humanizePercentage }}"
+  - name: api_alerts
+    rules:
+      - alert: HighErrorRate
+        expr: |
+          sum(rate(http_requests_total{status=~"5.."}[5m])) by (service)
+          /
+          sum(rate(http_requests_total[5m])) by (service)
+          > 0.05
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "High error rate on {{ $labels.service }}"
+          description: "Error rate is {{ $value | humanizePercentage }}"
 ```
 
 ### Set Up Synthetic Monitoring
@@ -57,7 +57,7 @@ def check_health():
         'https://api.example.com/auth/health',
         'https://api.example.com/orders/health'
     ]
-    
+
     for endpoint in endpoints:
         try:
             response = requests.get(endpoint, timeout=5)
@@ -79,13 +79,13 @@ escalation_policy:
     targets:
       - on_call_engineer
     timeout: 5m
-  
+
   - level: 2
     targets:
       - on_call_engineer
       - team_lead
     timeout: 10m
-  
+
   - level: 3
     targets:
       - on_call_engineer
@@ -103,9 +103,10 @@ escalation_policy:
 **Started**: 2024-11-15 03:15 UTC  
 **Severity**: P1 (Critical)  
 **Impact**: 100% of API requests failing  
-**Incident Commander**: @jane-doe  
+**Incident Commander**: @jane-doe
 
 **Current Actions**:
+
 - Rolled back deployment from 03:10 UTC
 - Investigating database connection pool exhaustion
 - Customer support team notified
@@ -167,14 +168,17 @@ def query_database(query):
 # Postmortem: API Gateway Outage (2024-11-15)
 
 ## Summary
+
 API Gateway experienced complete outage for 23 minutes due to database connection pool exhaustion.
 
 ## Impact
+
 - **Duration**: 23 minutes
 - **Users Affected**: 100% of API users
 - **Revenue Impact**: ~$15,000
 
 ## Timeline
+
 - 03:10 - New deployment rolled out
 - 03:15 - First alerts fired
 - 03:18 - Incident declared P1
@@ -182,19 +186,23 @@ API Gateway experienced complete outage for 23 minutes due to database connectio
 - 03:33 - Service restored
 
 ## Root Cause
+
 Connection pool size was not increased to match new deployment's connection requirements.
 
 ## What Went Well
+
 - Alert fired within 5 minutes
 - Team responded quickly
 - Rollback process worked smoothly
 
 ## What Went Wrong
+
 - No load testing of new connection requirements
 - Connection pool monitoring was not in place
 - Deployment process didn't catch the issue
 
 ## Action Items
+
 1. [ ] Add connection pool monitoring (Owner: @john, Due: 2024-11-20)
 2. [ ] Implement load testing in CI/CD (Owner: @sarah, Due: 2024-11-25)
 3. [ ] Review all service connection configs (Owner: @mike, Due: 2024-11-22)
@@ -221,4 +229,4 @@ A robust incident response process turns chaos into coordinated action. Invest i
 
 ---
 
-*How does your team handle incidents? Share your experiences!*
+_How does your team handle incidents? Share your experiences!_

@@ -33,16 +33,19 @@
 ## 🛠️ Tech Stack
 
 ### Core Framework
+
 - **[Next.js 16](https://nextjs.org/)** - React framework with App Router
 - **[React 19](https://react.dev/)** - Latest React with concurrent features
 - **[TypeScript](https://www.typescriptlang.org/)** - Type-safe development
 
 ### Styling & UI
+
 - **[Tailwind CSS 4](https://tailwindcss.com/)** - Utility-first CSS framework
 - **[Lucide React](https://lucide.dev/)** - Beautiful, consistent icons
 - **[next-themes](https://github.com/pacocoursey/next-themes)** - Dark mode support
 
 ### Integrations
+
 - **[Cal.com](https://cal.com/)** - Embedded scheduling for contact form
 
 ---
@@ -88,12 +91,14 @@ devopsfoundry/
 ### Installation
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/crypticseeds/devopsfoundry.git
    cd devopsfoundry
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    # or
@@ -105,6 +110,7 @@ devopsfoundry/
    ```
 
 3. **Run the development server**
+
    ```bash
    npm run dev
    # or
@@ -116,7 +122,7 @@ devopsfoundry/
    ```
 
 4. **Open your browser**
-   
+
    Navigate to [http://localhost:3000](http://localhost:3000) to see the application.
 
 ---
@@ -130,39 +136,39 @@ All content is centralized in **`src/data/content.ts`** for easy updates:
 ```typescript
 // Update hero section
 export const hero = {
-    location: "Your Location",
-    title: {
-        first: "Your Title",
-        second: "Your Subtitle"
-    },
-    description: "Your description...",
-    // ...
-}
+  location: "Your Location",
+  title: {
+    first: "Your Title",
+    second: "Your Subtitle",
+  },
+  description: "Your description...",
+  // ...
+};
 
 // Add/edit projects
 export const projects = [
-    {
-        title: "Project Name",
-        description: "Project description...",
-        tags: ["Tag1", "Tag2"],
-        links: {
-            github: "https://github.com/...",
-            demo: "https://...",
-            writeup: "/blog/..."
-        }
-    }
-]
+  {
+    title: "Project Name",
+    description: "Project description...",
+    tags: ["Tag1", "Tag2"],
+    links: {
+      github: "https://github.com/...",
+      demo: "https://...",
+      writeup: "/blog/...",
+    },
+  },
+];
 
 // Add/edit blog posts
 export const blogPosts = [
-    {
-        title: "Post Title",
-        summary: "Post summary...",
-        date: "MMM DD, YYYY",
-        tags: ["Tag1", "Tag2"],
-        slug: "post-slug"
-    }
-]
+  {
+    title: "Post Title",
+    summary: "Post summary...",
+    date: "MMM DD, YYYY",
+    tags: ["Tag1", "Tag2"],
+    slug: "post-slug",
+  },
+];
 ```
 
 ### Environment Variables
@@ -259,16 +265,16 @@ To add a new project to the **Featured Projects** section on the homepage:
 }
 ```
 
-| Field | Description |
-|-------|-------------|
-| `title` | Project name |
-| `description` | Short description (2-3 sentences) |
-| `tags` | Array of technology tags |
-| `image` | Banner image path (in `/public/projects/`) |
-| `date` | Display date (e.g., "Jan 2024") |
-| `links.github` | GitHub repository URL |
-| `links.demo` | Live demo URL (or `null`) |
-| `links.writeup` | Case study/blog post link (or `null`) |
+| Field           | Description                                |
+| --------------- | ------------------------------------------ |
+| `title`         | Project name                               |
+| `description`   | Short description (2-3 sentences)          |
+| `tags`          | Array of technology tags                   |
+| `image`         | Banner image path (in `/public/projects/`) |
+| `date`          | Display date (e.g., "Jan 2024")            |
+| `links.github`  | GitHub repository URL                      |
+| `links.demo`    | Live demo URL (or `null`)                  |
+| `links.writeup` | Case study/blog post link (or `null`)      |
 
 > **Note:** Featured Projects are separate from the Projects page. The Projects page (`/projects`) automatically reads from MDX files in `content/docs/projects/`.
 

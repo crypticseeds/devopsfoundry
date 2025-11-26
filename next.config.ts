@@ -3,20 +3,20 @@ import { createMDX } from "fumadocs-mdx/next";
 
 const nextConfig: NextConfig = {
   /* config options here */
-  serverExternalPackages: ['typescript', 'twoslash'],
+  serverExternalPackages: ["typescript", "twoslash"],
   async rewrites() {
     return [
       {
-        source: '/blog/:path*.mdx',
-        destination: '/llms.mdx/:path*',
+        source: "/blog/:path*.mdx",
+        destination: "/llms.mdx/:path*",
       },
       {
-        source: '/projects/:path*.mdx',
-        destination: '/llms.mdx/:path*',
+        source: "/projects/:path*.mdx",
+        destination: "/llms.mdx/:path*",
       },
       {
-        source: '/tutorials/:path*.mdx',
-        destination: '/llms.mdx/:path*',
+        source: "/tutorials/:path*.mdx",
+        destination: "/llms.mdx/:path*",
       },
     ];
   },

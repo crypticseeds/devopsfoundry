@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Check, Copy } from 'lucide-react';
+import { useState } from "react";
+import { Check, Copy } from "lucide-react";
 
 interface LLMCopyButtonProps {
   markdownUrl: string;
@@ -12,29 +12,29 @@ export function LLMCopyButton({ markdownUrl }: LLMCopyButtonProps) {
 
   // Fallback copy method for non-secure contexts
   const fallbackCopyTextToClipboard = (text: string) => {
-    const textArea = document.createElement('textarea');
+    const textArea = document.createElement("textarea");
     textArea.value = text;
-    textArea.style.position = 'fixed';
-    textArea.style.top = '0';
-    textArea.style.left = '0';
-    textArea.style.width = '2em';
-    textArea.style.height = '2em';
-    textArea.style.padding = '0';
-    textArea.style.border = 'none';
-    textArea.style.outline = 'none';
-    textArea.style.boxShadow = 'none';
-    textArea.style.background = 'transparent';
+    textArea.style.position = "fixed";
+    textArea.style.top = "0";
+    textArea.style.left = "0";
+    textArea.style.width = "2em";
+    textArea.style.height = "2em";
+    textArea.style.padding = "0";
+    textArea.style.border = "none";
+    textArea.style.outline = "none";
+    textArea.style.boxShadow = "none";
+    textArea.style.background = "transparent";
     document.body.appendChild(textArea);
     textArea.focus();
     textArea.select();
 
     try {
-      const successful = document.execCommand('copy');
-      if (!successful) throw new Error('execCommand failed');
+      const successful = document.execCommand("copy");
+      if (!successful) throw new Error("execCommand failed");
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
-      console.error('Fallback: Could not copy text: ', err);
+      console.error("Fallback: Could not copy text: ", err);
       throw err;
     } finally {
       document.body.removeChild(textArea);
@@ -46,20 +46,30 @@ export function LLMCopyButton({ markdownUrl }: LLMCopyButtonProps) {
       const response = await fetch(markdownUrl);
 
       if (!response.ok) {
-        console.error('Failed to fetch markdown:', response.status, response.statusText);
-        throw new Error(`Failed to fetch markdown: ${response.status} ${response.statusText}`);
+        console.error(
+          "Failed to fetch markdown:",
+          response.status,
+          response.statusText,
+        );
+        throw new Error(
+          `Failed to fetch markdown: ${response.status} ${response.statusText}`,
+        );
       }
 
-      const contentType = response.headers.get('content-type');
-      if (contentType && !contentType.includes('text/markdown') && !contentType.includes('text/plain')) {
-        console.warn('Unexpected content type:', contentType);
+      const contentType = response.headers.get("content-type");
+      if (
+        contentType &&
+        !contentType.includes("text/markdown") &&
+        !contentType.includes("text/plain")
+      ) {
+        console.warn("Unexpected content type:", contentType);
       }
 
       const text = await response.text();
 
-      if (text.includes('<!DOCTYPE html>')) {
-        console.error('Received HTML instead of markdown. URL:', markdownUrl);
-        throw new Error('Received HTML instead of markdown');
+      if (text.includes("<!DOCTYPE html>")) {
+        console.error("Received HTML instead of markdown. URL:", markdownUrl);
+        throw new Error("Received HTML instead of markdown");
       }
 
       // Try modern clipboard API first, fallback to execCommand
@@ -72,9 +82,12 @@ export function LLMCopyButton({ markdownUrl }: LLMCopyButtonProps) {
         fallbackCopyTextToClipboard(text);
       }
     } catch (error) {
-      console.error('Failed to copy markdown:', error);
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      alert(`Failed to copy markdown: ${errorMessage}\n\nTip: Try accessing the site via localhost:3000 instead of the IP address for better clipboard support.`);
+      console.error("Failed to copy markdown:", error);
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error";
+      alert(
+        `Failed to copy markdown: ${errorMessage}\n\nTip: Try accessing the site via localhost:3000 instead of the IP address for better clipboard support.`,
+      );
     }
   };
 
@@ -98,4 +111,3 @@ export function LLMCopyButton({ markdownUrl }: LLMCopyButtonProps) {
     </button>
   );
 }
-
