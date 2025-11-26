@@ -131,14 +131,14 @@ def predict(input_data: PredictionInput):
             input_data.petal_length,
             input_data.petal_width
         ]])
-        
+
         # Make prediction
         prediction = model.predict(features)[0]
         probabilities = model.predict_proba(features)[0].tolist()
-        
+
         # Map to class name
         class_names = ['setosa', 'versicolor', 'virginica']
-        
+
         return PredictionOutput(
             prediction=int(prediction),
             probability=probabilities,
@@ -209,6 +209,7 @@ CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
 ### Create Requirements File
 
 **requirements.txt**:
+
 ```
 fastapi==0.104.1
 uvicorn[standard]==0.24.0
@@ -256,12 +257,12 @@ prediction_duration = Histogram('prediction_duration_seconds', 'Time spent proce
 @app.post("/predict", response_model=PredictionOutput)
 def predict(input_data: PredictionInput):
     start_time = time.time()
-    
+
     # ... existing prediction code ...
-    
+
     prediction_counter.inc()
     prediction_duration.observe(time.time() - start_time)
-    
+
     return result
 
 @app.get("/metrics")
@@ -322,6 +323,7 @@ def predict(input_data: PredictionInput):
 ### 4. Monitoring and Logging
 
 Track key metrics:
+
 - Request count
 - Response time
 - Error rate

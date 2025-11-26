@@ -78,7 +78,7 @@ kafka_consumer = FlinkKafkaConsumer(
 def process_log(log_line):
     try:
         log = json.loads(log_line)
-        
+
         # Extract features
         return {
             'timestamp': log['timestamp'],
@@ -113,14 +113,14 @@ class LogEmbedder:
             chunk_size=500,
             chunk_overlap=50
         )
-        
+
         # Initialize Pinecone
         pinecone.init(
             api_key=os.getenv("PINECONE_API_KEY"),
             environment="us-west1-gcp"
         )
         self.index = pinecone.Index("log-embeddings")
-    
+
     def embed_log(self, log_entry):
         # Create searchable text
         text = f"""
@@ -129,10 +129,10 @@ class LogEmbedder:
         Message: {log_entry['message']}
         Error Type: {log_entry.get('error_type', 'N/A')}
         """
-        
+
         # Generate embedding
         embedding = self.embeddings.embed_query(text)
-        
+
         # Store in vector DB
         self.index.upsert(
             vectors=[{
@@ -146,7 +146,7 @@ class LogEmbedder:
                 }
             }]
         )
-        
+
         return embedding
 
 embedder = LogEmbedder()
@@ -168,29 +168,29 @@ class LogAnalyzer:
             model_name="gpt-4-turbo-preview",
             temperature=0.2
         )
-        
+
         self.vectorstore = Pinecone.from_existing_index(
             index_name="log-embeddings",
             embedding=OpenAIEmbeddings()
         )
-        
+
         # Custom prompt for log analysis
         self.prompt_template = """
         You are an expert SRE analyzing application logs. Based on the following log entries:
-        
+
         {context}
-        
+
         User Question: {question}
-        
+
         Provide:
         1. A clear explanation of what's happening
         2. Likely root cause
         3. Suggested remediation steps
         4. Related logs to investigate
-        
+
         Be specific and actionable. Reference log timestamps and services.
         """
-        
+
         self.qa_chain = ConversationalRetrievalChain.from_llm(
             llm=self.llm,
             retriever=self.vectorstore.as_retriever(
@@ -198,13 +198,13 @@ class LogAnalyzer:
             ),
             return_source_documents=True
         )
-    
+
     def analyze(self, query: str, chat_history: list = []):
         response = self.qa_chain({
             "question": query,
             "chat_history": chat_history
         })
-        
+
         return {
             "answer": response['answer'],
             "source_logs": [
@@ -257,17 +257,17 @@ async def analyze_logs(request: QueryRequest):
         if request.log_levels:
             enhanced_query += f"Log levels: {', '.join(request.log_levels)}\n"
         enhanced_query += f"Time range: last {request.time_range}"
-        
+
         # Analyze using RAG pipeline
         result = analyzer.analyze(enhanced_query)
-        
+
         return AnalysisResponse(
             answer=result['answer'],
             source_logs=result['source_logs'],
             suggested_actions=extract_actions(result['answer']),
             confidence_score=calculate_confidence(result)
         )
-    
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -291,7 +291,7 @@ class AnomalyDetector:
             random_state=42
         )
         self.is_trained = False
-    
+
     def extract_features(self, logs):
         # Feature engineering
         features = []
@@ -304,25 +304,25 @@ class AnomalyDetector:
                 log['error_rate']
             ])
         return np.array(features)
-    
+
     def train(self, historical_logs):
         features = self.extract_features(historical_logs)
         self.model.fit(features)
         self.is_trained = True
-    
+
     def detect_anomalies(self, current_logs):
         if not self.is_trained:
             raise ValueError("Model not trained")
-        
+
         features = self.extract_features(current_logs)
         predictions = self.model.predict(features)
-        
+
         # -1 indicates anomaly
         anomalies = [
             log for log, pred in zip(current_logs, predictions)
             if pred == -1
         ]
-        
+
         return anomalies
 ```
 
@@ -347,34 +347,34 @@ spec:
         app: loginsight-api
     spec:
       containers:
-      - name: api
-        image: loginsight/api:v1.0.0
-        ports:
-        - containerPort: 8000
-        env:
-        - name: OPENAI_API_KEY
-          valueFrom:
-            secretKeyRef:
-              name: openai-secret
-              key: api-key
-        - name: PINECONE_API_KEY
-          valueFrom:
-            secretKeyRef:
-              name: pinecone-secret
-              key: api-key
-        resources:
-          requests:
-            memory: "2Gi"
-            cpu: "1000m"
-          limits:
-            memory: "4Gi"
-            cpu: "2000m"
-        livenessProbe:
-          httpGet:
-            path: /api/v1/health
-            port: 8000
-          initialDelaySeconds: 30
-          periodSeconds: 10
+        - name: api
+          image: loginsight/api:v1.0.0
+          ports:
+            - containerPort: 8000
+          env:
+            - name: OPENAI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: openai-secret
+                  key: api-key
+            - name: PINECONE_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: pinecone-secret
+                  key: api-key
+          resources:
+            requests:
+              memory: "2Gi"
+              cpu: "1000m"
+            limits:
+              memory: "4Gi"
+              cpu: "2000m"
+          livenessProbe:
+            httpGet:
+              path: /api/v1/health
+              port: 8000
+            initialDelaySeconds: 30
+            periodSeconds: 10
 ---
 apiVersion: v1
 kind: Service
@@ -385,8 +385,8 @@ spec:
   selector:
     app: loginsight-api
   ports:
-  - port: 80
-    targetPort: 8000
+    - port: 80
+      targetPort: 8000
   type: LoadBalancer
 ```
 
@@ -424,6 +424,7 @@ The system handles natural language queries like:
 ### Challenge: High LLM API Costs
 
 **Solution**: Implemented tiered model strategy:
+
 - GPT-4 for complex analysis
 - GPT-3.5 for simple queries
 - Local Ollama model for development/testing

@@ -34,15 +34,15 @@ metadata:
 spec:
   selector: app == 'backend'
   ingress:
-  - action: Allow
-    protocol: TCP
-    source:
-      selector: app == 'frontend'
-    destination:
-      ports:
-      - 8080
+    - action: Allow
+      protocol: TCP
+      source:
+        selector: app == 'frontend'
+      destination:
+        ports:
+          - 8080
   egress:
-  - action: Allow
+    - action: Allow
 ```
 
 ### Cilium
@@ -59,17 +59,17 @@ spec:
     matchLabels:
       app: api
   ingress:
-  - fromEndpoints:
-    - matchLabels:
-        app: frontend
-    toPorts:
-    - ports:
-      - port: "8080"
-        protocol: TCP
-      rules:
-        http:
-        - method: "GET"
-          path: "/api/v1/.*"
+    - fromEndpoints:
+        - matchLabels:
+            app: frontend
+      toPorts:
+        - ports:
+            - port: "8080"
+              protocol: TCP
+          rules:
+            http:
+              - method: "GET"
+                path: "/api/v1/.*"
 ```
 
 ## Service Types Explained
@@ -88,8 +88,8 @@ spec:
   selector:
     app: backend
   ports:
-  - port: 80
-    targetPort: 8080
+    - port: 80
+      targetPort: 8080
 ```
 
 ### NodePort
@@ -106,9 +106,9 @@ spec:
   selector:
     app: web
   ports:
-  - port: 80
-    targetPort: 8080
-    nodePort: 30080
+    - port: 80
+      targetPort: 8080
+      nodePort: 30080
 ```
 
 ### LoadBalancer
@@ -125,8 +125,8 @@ spec:
   selector:
     app: web
   ports:
-  - port: 80
-    targetPort: 8080
+    - port: 80
+      targetPort: 8080
 ```
 
 ## Ingress Controllers
@@ -144,27 +144,27 @@ metadata:
 spec:
   ingressClassName: nginx
   tls:
-  - hosts:
-    - api.example.com
-    secretName: api-tls
+    - hosts:
+        - api.example.com
+      secretName: api-tls
   rules:
-  - host: api.example.com
-    http:
-      paths:
-      - path: /v1
-        pathType: Prefix
-        backend:
-          service:
-            name: api-v1
-            port:
-              number: 80
-      - path: /v2
-        pathType: Prefix
-        backend:
-          service:
-            name: api-v2
-            port:
-              number: 80
+    - host: api.example.com
+      http:
+        paths:
+          - path: /v1
+            pathType: Prefix
+            backend:
+              service:
+                name: api-v1
+                port:
+                  number: 80
+          - path: /v2
+            pathType: Prefix
+            backend:
+              service:
+                name: api-v2
+                port:
+                  number: 80
 ```
 
 ## Network Policies
@@ -180,7 +180,7 @@ metadata:
 spec:
   podSelector: {}
   policyTypes:
-  - Ingress
+    - Ingress
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -192,15 +192,15 @@ spec:
     matchLabels:
       app: database
   policyTypes:
-  - Ingress
+    - Ingress
   ingress:
-  - from:
-    - podSelector:
-        matchLabels:
-          app: api
-    ports:
-    - protocol: TCP
-      port: 5432
+    - from:
+        - podSelector:
+            matchLabels:
+              app: api
+      ports:
+        - protocol: TCP
+          port: 5432
 ```
 
 ## Service Mesh: The Next Level
@@ -216,26 +216,26 @@ metadata:
   name: api-routes
 spec:
   hosts:
-  - api.example.com
+    - api.example.com
   http:
-  - match:
-    - headers:
-        user-type:
-          exact: premium
-    route:
-    - destination:
-        host: api-service
-        subset: v2
-      weight: 100
-  - route:
-    - destination:
-        host: api-service
-        subset: v1
-      weight: 90
-    - destination:
-        host: api-service
-        subset: v2
-      weight: 10
+    - match:
+        - headers:
+            user-type:
+              exact: premium
+      route:
+        - destination:
+            host: api-service
+            subset: v2
+          weight: 100
+    - route:
+        - destination:
+            host: api-service
+            subset: v1
+          weight: 90
+        - destination:
+            host: api-service
+            subset: v2
+          weight: 10
 ---
 apiVersion: networking.istio.io/v1beta1
 kind: DestinationRule
@@ -244,12 +244,12 @@ metadata:
 spec:
   host: api-service
   subsets:
-  - name: v1
-    labels:
-      version: v1
-  - name: v2
-    labels:
-      version: v2
+    - name: v1
+      labels:
+        version: v1
+    - name: v2
+      labels:
+        version: v2
 ```
 
 ## Debugging Network Issues
@@ -295,7 +295,7 @@ spec:
   selector:
     app: api
   ports:
-  - port: 80
+    - port: 80
 ```
 
 ### Use Headless Services for StatefulSets
@@ -310,7 +310,7 @@ spec:
   selector:
     app: cassandra
   ports:
-  - port: 9042
+    - port: 9042
 ```
 
 ## Monitoring Network Performance
@@ -334,4 +334,4 @@ Kubernetes networking is complex but logical. Master the basics (CNI, Services, 
 
 ---
 
-*What Kubernetes networking challenges have you faced? Let's discuss solutions!*
+_What Kubernetes networking challenges have you faced? Let's discuss solutions!_

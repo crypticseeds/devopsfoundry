@@ -63,7 +63,7 @@ main "$@"
 
 ### Basic Array Operations
 
-```bash
+````bash
 # Declare array
 declare -a servers=("web1" "web2" "db1")
 
@@ -84,13 +84,13 @@ declare -A config=(
 )
 
 echo "Connecting to ${config[host]}:${config[port]}"
-```
+````
 
 ## Parameter Expansion
 
 ### Default Values and Substitution
 
-```bash
+````bash
 # Default values
 database=${DATABASE:-"production"}
 port=${PORT:-5432}
@@ -102,7 +102,7 @@ port=${PORT:-5432}
 filename="backup.tar.gz"
 echo "${filename%.tar.gz}"  # backup
 echo "${filename##*.}"       # gz
-```
+````
 
 ### Pattern Replacement
 
@@ -136,17 +136,17 @@ retry() {
     local max_attempts=3
     local attempt=1
     local delay=5
-    
+
     while [ $attempt -le $max_attempts ]; do
         if "$@"; then
             return 0
         fi
-        
+
         log "Attempt $attempt failed. Retrying in ${delay}s..."
         sleep "$delay"
         ((attempt++))
     done
-    
+
     error "Command failed after $max_attempts attempts"
 }
 
@@ -162,7 +162,7 @@ retry curl -f https://api.example.com/health
 # Function with return value
 check_service() {
     local service=$1
-    
+
     if systemctl is-active --quiet "$service"; then
         echo "running"
         return 0
@@ -213,22 +213,22 @@ done < <(find /var/log -name "*.log" -mtime -1)
 run_parallel() {
     local max_jobs=4
     local job_count=0
-    
+
     for server in "${servers[@]}"; do
         {
             log "Processing $server"
             ssh "$server" "uptime"
         } &
-        
+
         ((job_count++))
-        
+
         # Wait if we've reached max parallel jobs
         if (( job_count >= max_jobs )); then
             wait -n  # Wait for any job to finish
             ((job_count--))
         fi
     done
-    
+
     wait  # Wait for all remaining jobs
 }
 ```
@@ -243,7 +243,7 @@ read_config() {
     local config_file=$1
     local section=$2
     local key=$3
-    
+
     awk -F '=' \
         -v section="$section" \
         -v key="$key" \
@@ -279,9 +279,9 @@ create_backup() {
     local name=$(basename "$source")
     local timestamp=$(date +%Y%m%d_%H%M%S)
     local backup_file="${BACKUP_DIR}/${name}_${timestamp}.tar.gz"
-    
+
     log "Creating backup of $source"
-    
+
     if tar -czf "$backup_file" "$source" 2>/dev/null; then
         log "Backup created: $backup_file"
         return 0
@@ -298,14 +298,14 @@ cleanup_old_backups() {
 
 main() {
     log "=== Backup started ==="
-    
+
     # Create backups
     create_backup "/etc"
     create_backup "/var/www"
-    
+
     # Cleanup
     cleanup_old_backups
-    
+
     log "=== Backup completed ==="
 }
 

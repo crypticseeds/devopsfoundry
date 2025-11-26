@@ -108,14 +108,14 @@ asg = boto3.client('autoscaling')
 # Scale down during off-hours
 def scale_for_time():
     current_hour = datetime.now().hour
-    
+
     if 22 <= current_hour or current_hour <= 6:  # 10 PM to 6 AM
         min_size, desired = 1, 2
     elif 9 <= current_hour <= 18:  # Business hours
         min_size, desired = 5, 10
     else:
         min_size, desired = 2, 5
-    
+
     asg.update_auto_scaling_group(
         AutoScalingGroupName='api-servers',
         MinSize=min_size,
@@ -233,7 +233,7 @@ Avoid NAT Gateway costs:
 resource "aws_vpc_endpoint" "s3" {
   vpc_id       = aws_vpc.main.id
   service_name = "com.amazonaws.us-east-1.s3"
-  
+
   route_table_ids = [
     aws_route_table.private.id
   ]
@@ -243,7 +243,7 @@ resource "aws_vpc_endpoint" "s3" {
 resource "aws_vpc_endpoint" "dynamodb" {
   vpc_id       = aws_vpc.main.id
   service_name = "com.amazonaws.us-east-1.dynamodb"
-  
+
   route_table_ids = [
     aws_route_table.private.id
   ]
@@ -323,12 +323,12 @@ aws budgets create-budget \
 
 After 3 months of optimization:
 
-| Category | Before | After | Savings |
-|----------|--------|-------|---------|
-| Compute | $45K | $25K | 44% |
-| Storage | $30K | $18K | 40% |
-| Network | $25K | $15K | 40% |
-| Database | $20K | $12K | 40% |
+| Category  | Before    | After    | Savings |
+| --------- | --------- | -------- | ------- |
+| Compute   | $45K      | $25K     | 44%     |
+| Storage   | $30K      | $18K     | 40%     |
+| Network   | $25K      | $15K     | 40%     |
+| Database  | $20K      | $12K     | 40%     |
 | **Total** | **$120K** | **$70K** | **42%** |
 
 ## Best Practices
@@ -345,4 +345,4 @@ Cost optimization is not a one-time project—it's an ongoing practice. Start wi
 
 ---
 
-*What's your biggest AWS cost challenge? Let's discuss strategies!*
+_What's your biggest AWS cost challenge? Let's discuss strategies!_

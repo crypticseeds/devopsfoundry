@@ -70,6 +70,7 @@ kubectl port-forward -n monitoring svc/prometheus-grafana 3000:80
 ```
 
 Access:
+
 - Prometheus: `http://localhost:9090`
 - Grafana: `http://localhost:3000` (admin/prom-operator)
 
@@ -88,9 +89,9 @@ spec:
     matchLabels:
       app: my-app
   endpoints:
-  - port: metrics
-    interval: 30s
-    path: /metrics
+    - port: metrics
+      interval: 30s
+      path: /metrics
 ```
 
 ## Step 4: Create Alerts
@@ -103,18 +104,18 @@ metadata:
   namespace: monitoring
 spec:
   groups:
-  - name: my-app
-    interval: 30s
-    rules:
-    - alert: HighErrorRate
-      expr: |
-        rate(http_requests_total{status=~"5.."}[5m]) > 0.05
-      for: 5m
-      labels:
-        severity: critical
-      annotations:
-        summary: "High error rate detected"
-        description: "Error rate is {{ $value }} requests/sec"
+    - name: my-app
+      interval: 30s
+      rules:
+        - alert: HighErrorRate
+          expr: |
+            rate(http_requests_total{status=~"5.."}[5m]) > 0.05
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "High error rate detected"
+            description: "Error rate is {{ $value }} requests/sec"
 ```
 
 ## Step 5: Build Grafana Dashboard

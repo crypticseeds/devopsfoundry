@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useState, useRef, useEffect } from 'react';
-import { ChevronDown, ExternalLink } from 'lucide-react';
-import { SiGithub, SiOpenai, SiAnthropic } from 'react-icons/si';
-import Link from 'next/link';
+import { useState, useRef, useEffect } from "react";
+import { ChevronDown, ExternalLink } from "lucide-react";
+import { SiGithub, SiOpenai, SiAnthropic } from "react-icons/si";
+import Link from "next/link";
 
 interface ViewOptionsProps {
   markdownUrl: string;
@@ -11,22 +11,23 @@ interface ViewOptionsProps {
 }
 
 const getFullUrl = (relativePath: string): string => {
-  if (typeof window !== 'undefined') {
+  if (typeof window !== "undefined") {
     return `${window.location.origin}${relativePath}`;
   }
   // Fallback for SSR - you can set this via environment variable
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://devopsfoundry.com';
+  const baseUrl =
+    process.env.NEXT_PUBLIC_SITE_URL || "https://devopsfoundry.com";
   return `${baseUrl}${relativePath}`;
 };
 
 const AI_PLATFORMS = [
   {
-    name: 'GitHub',
+    name: "GitHub",
     icon: <SiGithub className="h-5 w-5 shrink-0" />,
-    getUrl: (githubUrl?: string, _markdownUrl?: string) => githubUrl,
+    getUrl: (githubUrl?: string) => githubUrl,
   },
   {
-    name: 'ChatGPT',
+    name: "ChatGPT",
     icon: <SiOpenai className="h-5 w-5 shrink-0" />,
     getUrl: (_githubUrl?: string, markdownUrl?: string) => {
       if (!markdownUrl) return undefined;
@@ -36,7 +37,7 @@ const AI_PLATFORMS = [
     },
   },
   {
-    name: 'Claude AI',
+    name: "Claude AI",
     icon: <SiAnthropic className="h-5 w-5 shrink-0" />,
     getUrl: (_githubUrl?: string, markdownUrl?: string) => {
       if (!markdownUrl) return undefined;
@@ -53,13 +54,16 @@ export function ViewOptions({ markdownUrl, githubUrl }: ViewOptionsProps) {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   return (
@@ -78,7 +82,7 @@ export function ViewOptions({ markdownUrl, githubUrl }: ViewOptionsProps) {
           <div className="py-1">
             {AI_PLATFORMS.map((platform) => {
               const url = platform.getUrl(githubUrl, markdownUrl);
-              
+
               if (!url) return null;
 
               return (
@@ -94,7 +98,9 @@ export function ViewOptions({ markdownUrl, githubUrl }: ViewOptionsProps) {
                     <div className="text-muted-foreground group-hover:text-foreground transition-colors">
                       {platform.icon}
                     </div>
-                    <span className="font-medium text-foreground">Open in {platform.name}</span>
+                    <span className="font-medium text-foreground">
+                      Open in {platform.name}
+                    </span>
                   </div>
                   <ExternalLink className="h-4 w-4 text-muted-foreground group-hover:text-foreground transition-colors shrink-0" />
                 </Link>
@@ -106,4 +112,3 @@ export function ViewOptions({ markdownUrl, githubUrl }: ViewOptionsProps) {
     </div>
   );
 }
-
