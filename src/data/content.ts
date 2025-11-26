@@ -146,6 +146,7 @@ export const blogPosts = [
     date: "Oct 12, 2024",
     tags: ["SRE", "Observability", "Prometheus"],
     slug: "scaling-prometheus",
+    banner: "/blogs/sre-incident.png",
   },
   {
     title: "Building an Internal Developer Platform with Backstage",
@@ -154,6 +155,7 @@ export const blogPosts = [
     date: "Sep 28, 2024",
     tags: ["Platform Engineering", "Backstage", "DX"],
     slug: "internal-developer-platform",
+    banner: "/blogs/ci-cd-pipeline.png",
   },
   {
     title: "Optimizing LLM Inference Costs on AWS",
@@ -162,6 +164,7 @@ export const blogPosts = [
     date: "Sep 15, 2024",
     tags: ["AI Engineering", "AWS", "FinOps"],
     slug: "optimizing-llm-costs",
+    banner: "/blogs/aws-cost-optimization.png",
   },
 ];
 
