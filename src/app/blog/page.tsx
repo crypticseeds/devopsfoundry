@@ -19,7 +19,7 @@ export default function BlogPage() {
       url: post.url,
       slugs: post.slugs,
       data: {
-        title: post.data.title,
+        title: post.data.title || "Untitled",
         description: post.data.description || "",
         date: frontmatter.date,
         author: frontmatter.author,

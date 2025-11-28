@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useTheme } from "next-themes";
 import { Menu, Moon, Sun, X } from "lucide-react";
 
@@ -53,16 +54,22 @@ export function Header() {
             <div className="relative h-8 w-auto">
               {mounted &&
                 (resolvedTheme === "dark" ? (
-                  <img
-                    src="/logo-dark.png"
+                  <Image
+                    src="/assets/logo-dark.png"
                     alt="DevOps Foundry"
+                    width={120}
+                    height={32}
                     className="h-8 w-auto"
+                    priority
                   />
                 ) : (
-                  <img
-                    src="/logo-light.png"
+                  <Image
+                    src="/assets/logo-light.png"
                     alt="DevOps Foundry"
+                    width={120}
+                    height={32}
                     className="h-8 w-auto"
+                    priority
                   />
                 ))}
               {!mounted && <div className="h-8 w-8 bg-transparent" />}

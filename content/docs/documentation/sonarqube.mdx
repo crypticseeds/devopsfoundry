@@ -1,0 +1,194 @@
+---
+title: SonarQube
+description: Learn how to install and configure SonarQube for continuous code quality inspection
+date: 2024-11-28
+author: Femi Akinlotan
+difficulty: intermediate
+duration: 75 minutes
+tags: [sonarqube, code-quality, static-analysis, devops, security]
+---
+
+## What is SonarQube?
+
+SonarQube is an open-source platform developed by SonarSource for continuous inspection of code quality. It performs automatic code reviews using static code analysis to detect bugs, vulnerabilities, and code smells across 29 programming languages.
+
+By integrating SonarQube into your development workflow, teams can ensure cleaner, more maintainable code while improving overall software security and reliability. It is widely used in DevOps pipelines to enforce coding standards and best practices.
+
+## Prerequisites
+
+- Virtual Machine running Ubuntu 22.04 or newer
+
+### Update Package Repository and Packages
+
+```bash
+sudo apt update
+sudo apt upgrade
+```
+
+### Install PostgreSQL
+
+```bash
+sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+wget -qO- https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo tee /etc/apt/trusted.gpg.d/pgdg.asc &>/dev/null
+sudo apt update
+sudo apt-get -y install postgresql postgresql-contrib
+sudo systemctl enable postgresql
+sudo systemctl status postgresql
+```
+
+### Create SonarQube database
+
+```bash
+sudo -u postgres psql -c "CREATE USER sonar WITH ENCRYPTED PASSWORD 'sonar';"
+sudo -u postgres psql -c "CREATE DATABASE sonarqube OWNER sonar;"
+sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE sonarqube TO sonar;"
+```
+
+### Install Java
+
+```bash
+sudo apt install -y fontconfig openjdk-17-jdk
+sudo update-alternatives --config java
+```
+
+### Increase system limits
+
+```bash
+sudo tee -a /etc/security/limits.conf <<EOF
+sonarqube   -   nofile   65536
+sonarqube   -   nproc    4096
+EOF
+```
+
+```bash
+sudo tee -a /etc/sysctl.conf <<EOF
+vm.max_map_count = 262144
+EOF
+sudo sysctl -p
+```
+
+## Download and extract SonarQube
+
+```bash
+sudo wget https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-10.7.0.96327.zip
+```
+
+```bash
+sudo unzip sonarqube-10.7.0.96327.zip -d /opt
+sudo mv /opt/sonarqube-10.7.0.96327 /opt/sonarqube
+```
+
+### Create SonarQube user and set permissions
+
+```bash
+sudo groupadd sonar
+sudo useradd -c "user to run SonarQube" -d /opt/sonarqube -g sonar sonar
+sudo chown sonar:sonar /opt/sonarqube -R
+```
+
+### Configure SonarQube
+
+```bash
+sudo -u sonar vim /opt/sonarqube/conf/sonar.properties
+```
+
+**Update the following properties:**
+
+```properties
+sonar.jdbc.username=sonar
+sonar.jdbc.password=sonar
+sonar.jdbc.url=jdbc:postgresql://localhost:5432/sonarqube
+```
+
+### Create SonarQube service
+
+```bash
+sudo tee /etc/systemd/system/sonar.service <<EOF
+[Unit]
+Description=SonarQube service
+After=syslog.target network.target
+[Service]
+Type=forking
+ExecStart=/opt/sonarqube/bin/linux-x86-64/sonar.sh start
+ExecStop=/opt/sonarqube/bin/linux-x86-64/sonar.sh stop
+User=sonar
+Group=sonar
+Restart=always
+LimitNOFILE=65536
+LimitNPROC=4096
+[Install]
+WantedBy=multi-user.target
+EOF
+```
+
+### Start and enable SonarQube service
+
+```bash
+sudo systemctl enable sonar
+sudo systemctl start sonar
+sudo systemctl status sonar
+```
+
+---
+
+## Set up Nginx reverse proxy and TLS
+
+### TLS Configuration
+
+**Install Nginx:**
+
+```bash
+sudo apt install -y nginx
+```
+
+```bash
+sudo systemctl enable nginx
+sudo systemctl start nginx
+sudo systemctl status nginx
+```
+
+**Create Nginx config file:**
+
+```bash
+sudo vim /etc/nginx/sites-available/sonarqube.conf
+```
+
+Paste the contents below and be sure to update the domain name:
+
+```nginx
+server {
+    listen 80;
+    server_name sonarqube.devopsfoundry.com;
+    access_log /var/log/nginx/sonar.access.log;
+    error_log /var/log/nginx/sonar.error.log;
+    proxy_buffers 16 64k;
+    proxy_buffer_size 128k;
+    location / {
+        proxy_pass http://127.0.0.1:9000;
+        proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504;
+        proxy_redirect off;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto http;
+    }
+}
+```
+
+Next, activate the server block configuration 'sonarqube.conf' by creating a symlink of that file to the '/etc/nginx/sites-enabled' directory. Then, verify your Nginx configuration files.
+
+```bash
+sudo ln -s /etc/nginx/sites-available/sonarqube.conf /etc/nginx/sites-enabled/
+sudo nginx -t
+sudo systemctl restart nginx
+```
+
+**Install Certbot and obtain SSL certificate:**
+
+```bash
+sudo apt install -y python3-certbot-nginx
+```
+
+```bash
+sudo certbot --nginx -d sonarqube.devopsfoundry.com
+```

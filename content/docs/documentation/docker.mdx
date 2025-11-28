@@ -1,0 +1,74 @@
+---
+title: Docker
+description: Learn how to install and configure Docker on Ubuntu for containerized applications
+date: 2024-11-28
+author: Femi Akinlotan
+difficulty: beginner
+duration: 30 minutes
+tags: [docker, containers, devops, tutorial]
+---
+
+## What is Docker?
+
+Docker is an **open-source platform** that automates the deployment, scaling, and management of applications using **containers**. Containers allow you to package an application and its dependencies together, ensuring it runs consistently across different computing environments.
+
+Docker simplifies the development and operations (DevOps) process by creating **isolated environments** where applications can run with minimal overhead. It eliminates the "works on my machine" problem, enabling developers to build, test, and deploy applications quickly and reliably.
+
+### Install Docker
+
+**Add Docker's official GPG key:**
+
+```bash
+sudo apt-get update
+sudo apt-get install -y ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+```
+
+**Add the repository to Apt sources:**
+
+```bash
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+```
+
+### Start Docker service
+
+```bash
+sudo systemctl enable docker
+sudo systemctl start docker
+sudo systemctl status docker
+```
+
+**Run docker without sudo:**
+
+```bash
+sudo groupadd docker
+sudo usermod -aG docker $USER
+newgrp docker
+```
+
+```bash
+sudo reboot now
+```
+
+## Install Docker Compose
+
+```bash
+sudo curl -SL https://github.com/docker/compose/releases/download/v2.30.3/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
+```
+
+```bash
+sudo chmod +x /usr/local/bin/docker-compose
+```
+
+## Verify Installation
+
+```bash
+docker run hello-world
+```

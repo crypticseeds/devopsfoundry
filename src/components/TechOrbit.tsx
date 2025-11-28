@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Image from "next/image";
 import {
   SiDocker,
   SiKubernetes,
@@ -37,10 +38,12 @@ export function TechOrbit() {
       {/* Central Core with Portrait Placeholder */}
       <div className="absolute z-10 h-40 w-40 rounded-full bg-gradient-to-b from-foreground/5 to-foreground/10 p-1 shadow-lg shadow-black/5 backdrop-blur-sm border border-white/10 dark:border-white/5">
         <div className="relative h-full w-full overflow-hidden rounded-full bg-muted/50">
-          <img
-            src="/portrait.jpg"
+          <Image
+            src="/assets/portrait.jpg"
             alt="Portrait"
-            className="object-cover w-full h-full"
+            fill
+            className="object-cover"
+            priority
           />
         </div>
       </div>

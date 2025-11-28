@@ -8,7 +8,11 @@ import {
 import { DocsPage, DocsBody } from "fumadocs-ui/page";
 import { LLMCopyButton } from "@/components/ai/llm-copy-button";
 import { ViewOptions } from "@/components/ai/view-options";
+import { Feedback } from "@/components/feedback";
+import { onRateAction } from "@/lib/feedback-action";
 import Image from "next/image";
+import type { FumadocsPageWithBody } from "@/types/fumadocs";
+import { getMDXComponents } from "../../../../mdx-components";
 
 interface ProjectPageProps {
   params: Promise<{ slug: string[] }>;
@@ -51,14 +55,19 @@ export default async function ProjectPage(props: ProjectPageProps) {
     notFound();
   }
 
-  const MDX = page.data.body;
+  const pageWithBody = page as typeof page & FumadocsPageWithBody;
+  const MDX = pageWithBody.body || (page.data as unknown as { body?: typeof pageWithBody.body }).body;
   const frontmatter = page.data as typeof page.data & ProjectFrontmatter;
   const banner = frontmatter.banner;
   const tags = frontmatter.tags || [];
 
+  if (!MDX) {
+    notFound();
+  }
+
   return (
     <DocsPage
-      toc={page.data.toc}
+      toc={pageWithBody.toc || (page.data as unknown as { toc?: typeof pageWithBody.toc }).toc}
       tableOfContent={{ style: "clerk" }}
       footer={{ enabled: false }}
       breadcrumb={{ enabled: false }}
@@ -75,7 +84,7 @@ export default async function ProjectPage(props: ProjectPageProps) {
         <div className="not-prose relative w-full aspect-[2/1] rounded-xl overflow-hidden mb-8">
           <Image
             src={banner}
-            alt={page.data.title}
+            alt={page.data.title || "Project banner"}
             fill
             className="object-cover"
             priority
@@ -169,8 +178,11 @@ export default async function ProjectPage(props: ProjectPageProps) {
 
       {/* MDX Content - inside DocsBody for proper prose styling */}
       <DocsBody>
-        <MDX />
+        <MDX components={getMDXComponents({})} />
       </DocsBody>
+
+      {/* Feedback component */}
+      <Feedback onRateAction={onRateAction} />
     </DocsPage>
   );
 }

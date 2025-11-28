@@ -1,0 +1,84 @@
+---
+title: Doppler
+description: Learn how to install and configure Doppler for secure secret management
+date: 2024-11-28
+author: Femi Akinlotan
+difficulty: intermediate
+duration: 30 minutes
+tags: [doppler, secrets, security, devops, kubernetes]
+---
+
+## What is Doppler?
+
+Doppler is a secret management platform that helps developers securely store, manage, and sync environment variables and sensitive credentials across applications, teams, and environments. It simplifies secret management by providing a centralised, encrypted, and version-controlled solution, eliminating the risks of hardcoded secrets and manual configuration.
+
+Doppler integrates seamlessly with cloud platforms, CI/CD pipelines, and Kubernetes, ensuring that applications always have access to the latest secrets without requiring manual updates.
+
+## Prerequisites
+
+- Virtual Machine running Ubuntu 22.04 or newer
+
+### Update Package Repository and Upgrade Packages
+
+```bash
+sudo apt update
+sudo apt upgrade
+```
+
+### Add Doppler repository to your system
+
+```bash
+sudo apt-get update && sudo apt-get install -y apt-transport-https ca-certificates curl gnupg
+curl -sLf --retry 3 --tlsv1.2 --proto "=https" 'https://packages.doppler.com/public/cli/gpg.DE2A7741A397C129.key' | sudo gpg --dearmor -o /usr/share/keyrings/doppler-archive-keyring.gpg
+echo "deb [signed-by=/usr/share/keyrings/doppler-archive-keyring.gpg] https://packages.doppler.com/public/cli/deb/debian any-version main" | sudo tee /etc/apt/sources.list.d/doppler-cli.list
+```
+
+## Install Doppler
+
+```bash
+sudo apt-get update && sudo apt-get install doppler
+```
+
+```bash
+doppler --version
+```
+
+### Login and Set up Doppler
+
+```bash
+doppler login
+```
+
+`change to project directory before running next command`
+
+```bash
+doppler setup
+```
+
+### Install the Doppler Kubernetes Operator
+
+```bash
+helm repo add doppler https://helm.doppler.com
+helm repo update
+helm install doppler-operator doppler/doppler-kubernetes-operator \
+  --namespace doppler-operator-system \
+  --create-namespace
+```
+
+## Create Token
+
+```bash
+doppler configs tokens create yelp-token --plain
+```
+
+### Sample Use
+
+`Run this in project root folder`
+
+```bash
+doppler setup --project yelp-camp --config dev
+```
+
+```bash
+doppler secrets get DB_URL
+```

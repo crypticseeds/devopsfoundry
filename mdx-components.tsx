@@ -11,3 +11,13 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     ...components,
   };
 }
+
+// Server-safe version that can be called in server components
+export function getMDXComponents(components: MDXComponents = {}): MDXComponents {
+  return {
+    ...defaultMdxComponents,
+    ...Twoslash,
+    Mermaid,
+    ...components,
+  };
+}

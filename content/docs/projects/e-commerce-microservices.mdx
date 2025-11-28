@@ -1,0 +1,245 @@
+---
+title: E-commerce Microservices
+description: Building a scalable e-commerce platform using microservices architecture with Spring Boot, Netflix Eureka, Spring Cloud Gateway, and KeyCloak
+date: 2024-11-28
+author: Femi Akinlotan
+project: E-commerce Microservices
+tags:
+  [
+    Microservices,
+    Spring Boot,
+    Java,
+    Kubernetes,
+    DevOps,
+    Eureka,
+    Keycloak,
+    Kafka,
+  ]
+banner: /projects/e-commerce-microservices/banner.jpg
+---
+
+## Introduction
+
+In today's software architecture landscape, **microservices** have become a widely adopted design pattern for building scalable and maintainable applications. In this post, I'll walk you through the process of building an e-commerce platform using **microservices**, based on my GitHub project **[ecommerce-microservices](https://github.com/crypticseeds/ecommerce-microservices)**.
+
+I'll cover the project's architecture, the tools I've used, the API endpoints, and guide you on how to set it up on your local machine. Let's dive in!
+
+---
+
+## Micro Marketplace: An E-commerce Microservices Application
+
+### Solution Overview
+
+Micro Marketplace is a robust e-commerce application built on a microservices architecture using Spring technologies and other open-source tools.
+
+This platform leverages the power of **Spring Boot**, **Netflix Eureka**, **Spring Cloud Gateway**, and **KeyCloak** for service development, discovery, gateway management, and security, respectively.
+It incorporates **Resilience4j** for resilient synchronous communication and **Apache Kafka** for seamless event-driven asynchronous communication between services.
+The observability stack includes **Micrometer**, **Zipkin** for distributed tracing, and **Prometheus** with **Grafana** for monitoring and visualization.
+With a focus on scalability, resilience, and real-time interaction, Micro Marketplace provides a robust foundation for creating feature-rich online marketplaces.
+
+### Solution Architecture
+
+**Services**
+
+- **Product Service**: Manages product information (e.g., creation, retrieval, updates) using a **MongoDB** database.
+- **Order Service**: Handles order management (e.g., creation, retrieval) using a **MySQL** database.
+- **Inventory Service**: Manages product inventory using a **MySQL** database.
+- **Notification Service**: A stateless service for sending notifications regarding orders or other updates.
+
+**Major Components**
+
+- **Discovery Server**: Uses **Netflix Eureka** for service registration and discovery, allowing microservices to locate and interact with each other dynamically.
+- **API Gateway**: Deployed using **Spring Cloud Gateway** to route external requests to appropriate microservices.
+- **Auth Server**: Secures microservices using **KeyCloak** for authentication and authorization.
+- **Circuit Breaker**: **Resilience4j** prevents cascading failures through circuit-breaking mechanisms.
+- **Message Broker**: **Apache Kafka** facilitates asynchronous communication for order notifications.
+- **Observability Stack**: Implements **Micrometer** for metrics, **Zipkin** for tracing, **Prometheus** for metrics collection, and **Grafana** for visualization.
+
+### Tech Stack Used
+
+- Languages & Frameworks: Java, Spring Boot, Spring Cloud
+- Databases & Message Queue: MongoDB, MySQL, Apache Kafka
+- API Gateway: Spring Cloud Gateway
+- Service Discovery: Netflix Eureka
+- Circuit Breaker: Resilience4J
+- Security: KeyCloak
+- Observability: Micrometer, Zipkin, Prometheus, Grafana
+- Build & Containerization: Maven, Docker, Jib
+
+## Getting Started
+
+### Prerequisites
+
+Ensure that **Docker** and **Docker Compose** are installed and running.
+
+### Deployment
+
+1. Clone the repository
+
+```bash
+git clone https://github.com/crypticseeds/ecommerce-microservices.git
+cd ecommerce-microservices
+```
+
+2. Start the containers:
+
+```bash
+docker compose up -d
+```
+
+3. Confirm that the containers are running:
+
+```bash
+docker ps
+```
+
+## Usage
+
+### Getting Credentials from KeyCloak
+
+1. Access the KeyCloak Admin UI at [http://localhost:8080/](http://localhost:8080/)
+2. Navigate to the **Realm**: `spring-boot-microservices-realm`.
+3. Go to the **Client**: `spring-cloud-client`.
+4. Under the **Credentials** section, copy the **Client Secret**.
+
+### Local Keycloak Access Token Setup
+
+To retrieve the access token from Keycloak locally, add the following entry to your system's hosts file:
+
+- **Windows**: `C:\Windows\System32\drivers\etc\hosts`
+- **Linux/Mac**: `/etc/hosts`
+
+```bash
+127.0.0.1 keycloak
+```
+
+This step is necessary to ensure that your local Keycloak instance resolves correctly via `127.0.0.1`.
+
+### Setup Postman Authentication
+
+On the **Postman** request page, set the **Authorization** type to **OAuth 2.0** and configure a **New Token** with the following:
+
+- **Token Name**: token
+- **Grant Type**: Client Credentials
+- **Access Token URL**: `http://keycloak:8080/realms/spring-boot-microservices-realm/protocol/openid-connect/token`
+- **Client ID**: spring-cloud-client
+- **Client Secret**: (copy from KeyCloak)
+
+Click on **Get New Access Token** and then **Use Token**.
+
+Alternatively, you can use the following `curl` command:
+
+```bash
+curl -X POST "http://keycloak:8080/realms/spring-boot-microservices-realm/protocol/openid-connect/token" \
+-H "Content-Type: application/x-www-form-urlencoded" \
+-d "grant_type=client_credentials" \
+-d "client_id=spring-cloud-client" \
+-d "client_secret=<client-secret>"
+```
+
+## Accessing API Endpoints
+
+**POST /api/product**
+
+- **Method**: POST
+- **Endpoint**: `http://localhost:8181/api/product`
+- **Authorization**: Use the OAuth 2.0 token obtained earlier.
+- **Body**:
+
+```json
+{
+  "name": "Test Product",
+  "description": "Test Description",
+  "price": 100
+}
+```
+
+![Product API POST Request](/projects/e-commerce-microservices/product_api_post_postman-2.png)
+
+**GET /api/product**
+
+- **Method**: GET
+- **Endpoint**: `http://localhost:8181/api/product`
+- **Authorization**: Use the OAuth 2.0 token obtained earlier.
+
+![Product API GET Request](/projects/e-commerce-microservices/product_api_get_postman-2.png)
+
+**POST /api/order**
+
+- **Method**: POST
+- **Endpoint**: `http://localhost:8181/api/order`
+- **Authorization**: Use the OAuth 2.0 token obtained earlier.
+- **Body**:
+
+```json
+{
+  "orderLineItemsDtoList": [
+    {
+      "skuCode": "iphone_16",
+      "price": 1100,
+      "quantity": 1
+    }
+  ]
+}
+```
+
+![Order API POST Request](/projects/e-commerce-microservices/order_api_post_postman-1.png)
+
+## Components UI
+
+### KeyCloak Admin UI
+
+Access KeyCloak at [http://localhost:8080/](http://localhost:8080/), and use the following settings:
+
+- **Realm**: `spring-boot-microservices-realm`
+- **Client**: `spring-cloud-client`
+
+![KeyCloak Realm](/projects/e-commerce-microservices/keycloak_realm.png)
+
+### Eureka Dashboard
+
+View discovered services (clients) on [http://localhost:8761/](http://localhost:8761/)
+
+![Eureka Dashboard](/projects/e-commerce-microservices/eureka_dashboard.png)
+
+### Zipkin UI
+
+Monitor traces for API calls on the [Zipkin UI](http://localhost:9411/zipkin/).
+
+![Zipkin UI](/projects/e-commerce-microservices/zipkin_ui.png)
+
+### Prometheus UI
+
+Access the Prometheus UI at [http://localhost:9090/](http://localhost:9090/)
+
+- Use **Prometheus Graph Query** to analyze metrics.
+- Monitor **Prometheus Targets** for health status.
+
+![Prometheus Targets](/projects/e-commerce-microservices/prometheus_targets.png)
+
+### Grafana Dashboard
+
+Access the **Grafana Dashboard** at [http://localhost:3000/](http://localhost:3000/)
+
+- Create a **Data Source** and import the **grafana-dashboard.json** file.
+- View performance data via the created dashboard.
+
+![Grafana Dashboard](/projects/e-commerce-microservices/grafana_dashboard.png)
+
+## Environment Cleanup
+
+To stop and remove all containers and resources (network, volume, etc.):
+
+```bash
+docker compose down -v
+```
+
+## Conclusion
+
+Building an e-commerce platform with **microservices** offers several benefits, including **scalability**, **resilience**, and **maintainability**. With this project, I've demonstrated how to create an e-commerce platform with core microservices like **user authentication**, **product management**, **order handling**, and **payment processing**. I also included essential monitoring tools like **Micrometer**, **Prometheus**, **Grafana**, and **Zipkin UI** to ensure observability into the platform's health and performance.
+
+Additionally, with the integration of **Apache Kafka** for event-driven communication and **Netflix Eureka** for service discovery, this architecture is highly scalable and can be extended to meet future needs.
+
+The project is open-source, so feel free to check it out on **[GitHub](https://github.com/crypticseeds/ecommerce-microservices)** and contribute!
+
+I hope this post helps you understand how microservices can be used to build a powerful, scalable e-commerce platform. Happy coding!

@@ -1,0 +1,267 @@
+---
+title: Jenkins
+description: Learn how to install and configure Jenkins CI/CD server with TLS and agent setup
+date: 2024-11-28
+author: Femi Akinlotan
+difficulty: intermediate
+duration: 90 minutes
+tags: [jenkins, ci-cd, automation, devops, tutorial]
+---
+
+## What is Jenkins?
+
+Jenkins is an open-source automation server widely used to automate parts of the software development lifecycle. It is primarily used for continuous integration (CI) and continuous delivery (CD), enabling developers to automatically build, test, and deploy applications.
+
+Jenkins supports hundreds of plugins to integrate with virtually every tool in the software development ecosystem, making it highly customisable and adaptable to various workflows. Jenkins can manage and monitor builds, trigger automated testing, and push changes to production without manual intervention, significantly improving development speed and reliability.
+
+**Key Features:**
+
+- Extensive Plugin Ecosystem – Integrates with tools like Git, Docker, Kubernetes, Maven, and more.
+- Pipeline as Code – Enables the definition of build and deployment pipelines through Jenkinsfiles.
+- Scalability – Can distribute workloads across multiple machines to handle large builds and tests.
+- Extensible – Custom plugins allow for integration with numerous other tools, enabling a highly flexible CI/CD workflow.
+
+## Prerequisites
+
+- Virtual Machine running Ubuntu 22.04 or newer
+
+## Update Package Repository and Packages
+
+```bash
+sudo apt update
+sudo apt upgrade
+```
+
+### Install Java 17
+
+**Become root:**
+
+```bash
+sudo -i
+```
+
+**Add Adoptium repository:**
+
+```bash
+wget -O - https://packages.adoptium.net/artifactory/api/gpg/key/public | tee /etc/apt/keyrings/adoptium.asc
+echo "deb [signed-by=/etc/apt/keyrings/adoptium.asc] https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main" | tee /etc/apt/sources.list.d/adoptium.list
+```
+
+**Update repository and install Java:**
+
+```bash
+apt update
+apt install temurin-17-jdk
+/usr/bin/java --version
+exit
+```
+
+## Install Jenkins
+
+```bash
+sudo wget -O /usr/share/keyrings/jenkins-keyring.asc \
+  https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
+echo "deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc]" \
+  https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
+  /etc/apt/sources.list.d/jenkins.list > /dev/null
+sudo apt-get update
+sudo apt-get -y install jenkins
+```
+
+### Start Jenkins
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable jenkins
+sudo systemctl start jenkins
+sudo systemctl status jenkins
+```
+
+`Print initial admin password`
+
+```bash
+sudo cat /var/lib/jenkins/secrets/initialAdminPassword
+```
+
+**Copy Temporary password**
+
+### Firewall Settings if required
+
+```bash
+YOURPORT=8080
+PERM="--permanent"
+SERV="$PERM --service=jenkins"
+firewall-cmd $PERM --new-service=jenkins
+firewall-cmd $SERV --set-short="Jenkins ports"
+firewall-cmd $SERV --set-description="Jenkins port exceptions"
+firewall-cmd $SERV --add-port=$YOURPORT/tcp
+firewall-cmd $PERM --add-service=jenkins
+firewall-cmd --zone=public --add-service=http --permanent
+firewall-cmd --reload
+```
+
+---
+
+## Enable TLS
+
+### TLS Configuration
+
+**Install Nginx:**
+
+```bash
+sudo apt install -y nginx
+```
+
+```bash
+sudo systemctl enable nginx
+sudo systemctl start nginx
+sudo systemctl status nginx
+```
+
+**Configure Nginx reverse proxy:**
+
+```bash
+sudo vim /etc/nginx/sites-available/jenkins.devopsfoundry.com
+```
+
+```nginx
+upstream jenkins {
+    server 127.0.0.1:8080;
+}
+server {
+    listen      80;
+    server_name jenkins.devopsfoundry.com;
+    access_log  /var/log/nginx/jenkins.access.log;
+    error_log   /var/log/nginx/jenkins.error.log;
+    proxy_buffers 16 64k;
+    proxy_buffer_size 128k;
+    location / {
+        proxy_pass  http://jenkins;
+        proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504;
+        proxy_redirect off;
+        proxy_set_header    Host            $host;
+        proxy_set_header    X-Real-IP       $remote_addr;
+        proxy_set_header    X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header    X-Forwarded-Proto https;
+    }
+}
+```
+
+```bash
+sudo ln -s /etc/nginx/sites-available/jenkins.devopsfoundry.com /etc/nginx/sites-enabled/
+```
+
+```bash
+sudo nginx -t
+sudo systemctl restart nginx
+```
+
+### Install Certbot and obtain SSL certificate
+
+```bash
+sudo apt install -y certbot python3-certbot-nginx
+sudo certbot --nginx -d jenkins.devopsfoundry.com
+```
+
+**Cloudflare Tunnel Config:**
+
+```yaml
+tunnel: j-tunnel
+credentials-file: /home/jenkins/.cloudflared/3e9dfb6f-63c9-4902-b48d-83aa2abb386a.json
+ingress:
+  - hostname: jenkins.devopsfoundry.com
+    service: http://127.0.0.1:8080 # Another service using HTTP
+  - service: http_status:404 # Default for unmatched requests
+```
+
+**Sample Jenkinsfile**
+
+```groovy
+pipeline {
+    agent any
+    stages {
+        stage('Hello World') {
+            steps {
+                echo 'Hello World'
+            }
+        }
+    }
+}
+```
+
+---
+
+## Setup Jenkins Agent
+
+### Agent Configuration
+
+**Run the following commands on your Jenkins agent node:**
+
+```bash
+sudo adduser jenkins
+sudo usermod -aG sudo jenkins
+sudo apt install -y fontconfig openjdk-17-jre
+```
+
+**Grant admin user passwordless sudo access:**
+
+```bash
+sudo visudo
+```
+
+```bash
+jenkins ALL=(ALL) NOPASSWD:ALL
+```
+
+### Generate SSH key pair
+
+SSH key pair for Jenkins-UI/Master server
+
+```bash
+ssh-keygen -t rsa -b 4096 -C "jenkins-agent"
+```
+
+**Copy the public key to the Jenkins agent:**
+
+```bash
+ssh-copy-id jenkins@<agent-ip-address>
+```
+
+Enter password for Jenkins-agent if prompted
+
+**Ensure SSH key-based authentication works, then logout:**
+
+```bash
+ssh jenkins@<agent-ip-address>
+```
+
+**Configure known hosts for Jenkins-UI (Complete this on UI):**
+
+```bash
+sudo mkdir -p /var/lib/jenkins/.ssh/
+```
+
+**Change permission for known_hosts:**
+
+```bash
+sudo chown -R jenkins:jenkins /var/lib/jenkins/.ssh
+```
+
+```bash
+sudo ssh-keyscan -H <agent-ip-address> >> /var/lib/jenkins/.ssh/known_hosts
+```
+
+**Create Jenkins credential with SSH username with private Key**
+
+**Add private key directly:**
+
+```bash
+cat jenkinsAgent_rsa.pub >> ~/.ssh/authorized_keys
+```
+
+Ensure that the permissions of the ~/.ssh directory is secure, as most ssh daemons will refuse to use keys that have file permissions that are considered insecure:
+
+```bash
+chmod 700 ~/.ssh
+chmod 600 ~/.ssh/authorized_keys ~/.ssh/jenkinsAgent_rsa
+```

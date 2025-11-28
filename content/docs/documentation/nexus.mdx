@@ -1,0 +1,205 @@
+---
+title: Nexus
+description: Learn how to install and configure Nexus Repository Manager for artifact storage and dependency management
+date: 2024-11-28
+author: Femi Akinlotan
+difficulty: intermediate
+duration: 60 minutes
+tags: [nexus, repository, artifacts, devops, maven]
+---
+
+## What is Nexus?
+
+Nexus is a **repository manager** designed to **store, manage, and distribute components, binaries, and build artifacts** across your entire software supply chain. It helps developers streamline **dependency management, version control, and artifact storage**, ensuring a smooth and efficient software development lifecycle.
+
+By integrating Nexus into your DevOps workflow, teams can securely manage open-source and proprietary dependencies while improving build performance and reliability.
+
+## Prerequisites
+
+- Virtual Machine running Ubuntu 22.04 or newer
+
+### Update Package Repository and Packages
+
+```bash
+sudo apt update
+sudo apt upgrade
+```
+
+### Install Java 17
+
+```bash
+sudo apt install -y fontconfig openjdk-17-jdk
+sudo update-alternatives --config java
+```
+
+## Download and extract Nexus3
+
+```bash
+wget https://download.sonatype.com/nexus/3/nexus-3.71.0-06-unix.tar.gz
+```
+
+```bash
+sudo tar -xzvf nexus-3.71.0-06-unix.tar.gz -C /opt
+sudo mv /opt/nexus-3.71.0-06 /opt/nexus
+```
+
+### Create Nexus user
+
+```bash
+sudo adduser nexus
+```
+
+### Update permissions for Nexus
+
+```bash
+sudo chown -R nexus:nexus /opt/nexus
+sudo chown -R nexus:nexus /opt/sonatype-work
+```
+
+### Configure Nexus to run as a service
+
+```bash
+sudo vim /opt/nexus/bin/nexus.rc
+```
+
+**Uncomment and set:**
+
+```bash
+run_as_user="nexus"
+```
+
+### Create Nexus Service
+
+```bash
+sudo tee /etc/systemd/system/nexus.service <<EOF
+[Unit]
+Description=nexus service
+After=network.target
+[Service]
+Type=forking
+LimitNOFILE=65536
+User=nexus
+Group=nexus
+ExecStart=/opt/nexus/bin/nexus start
+ExecStop=/opt/nexus/bin/nexus stop
+Restart=on-abort
+[Install]
+WantedBy=multi-user.target
+EOF
+```
+
+## Start and enable Nexus
+
+```bash
+sudo systemctl enable nexus
+sudo systemctl start nexus
+sudo systemctl status nexus
+```
+
+### Low Memory fix
+
+```bash
+sudo fallocate -l 2G /swapfile
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+```
+
+```bash
+echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
+```
+
+### Optimize Nexus Memory Settings
+
+```bash
+sudo vim /opt/nexus/bin/nexus.vmoptions
+```
+
+**Reduce the -Xms and -Xmx to these values**
+
+```bash
+-Xms512m
+-Xmx512m
+```
+
+### Restart Nexus
+
+```bash
+sudo systemctl enable nexus.service
+sudo systemctl start nexus.service
+sudo systemctl status nexus.service
+```
+
+---
+
+## Enable TLS
+
+### TLS Configuration
+
+**Install Nginx:**
+
+```bash
+sudo apt install -y nginx
+```
+
+**Start Nginx:**
+
+```bash
+sudo systemctl enable nginx
+sudo systemctl start nginx
+sudo systemctl status nginx
+```
+
+**Configure Nginx proxy for Nexus:**
+
+```bash
+sudo vim /etc/nginx/sites-available/nexus.devopsfoundry.com
+```
+
+Paste the following contents:
+
+```nginx
+server {
+    listen   *:80;
+    server_name  nexus.devopsfoundry.com;
+    client_max_body_size 1G;
+    location / {
+        proxy_pass http://127.0.0.1:8081;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+    # Docker /v2 and /v1 (for search) requests
+    location /v2 {
+        proxy_set_header Host $host:$server_port;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_pass http://127.0.0.1:1111;
+    }
+    location /v1 {
+        proxy_set_header Host $host:$server_port;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_pass http://127.0.0.1:1111;
+    }
+}
+```
+
+```bash
+sudo ln -s /etc/nginx/sites-available/nexus.devopsfoundry.com /etc/nginx/sites-enabled/
+```
+
+```bash
+sudo nginx -t
+sudo systemctl restart nginx
+```
+
+**Install Certbot and obtain TLS certificate:**
+
+```bash
+sudo apt install -y python3-certbot-nginx
+```
+
+```bash
+sudo certbot --nginx -d nexus.devopsfoundry.com
+```

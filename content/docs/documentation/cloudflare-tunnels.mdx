@@ -1,0 +1,176 @@
+---
+title: Cloudflare Tunnels
+description: Learn how to set up Cloudflare Tunnel to securely expose applications without opening firewall ports
+date: 2024-11-28
+author: Femi Akinlotan
+difficulty: intermediate
+duration: 45 minutes
+tags: [cloudflare, tunnels, networking, security, devops]
+---
+
+## What is Cloudflare Tunnel?
+
+Cloudflare Tunnel is a secure, encrypted connection that allows users to expose applications and services to the internet without opening inbound firewall ports. It enables businesses and developers to securely route traffic through Cloudflare's global network, protecting applications from DDoS attacks, unauthorised access, and other security threats.
+
+With Cloudflare Tunnel, self-hosted services can be accessed from anywhere without requiring a public IP address, VPN, or complex networking configurations. It works by running a lightweight Cloudflare Connector (cloudflared) in your local environment, which establishes a persistent outbound connection to Cloudflare's network.
+
+**Key Benefits:**
+
+- Zero Trust Security – Protects applications with identity-based access controls.
+- No Open Ports – Eliminates the need to expose services to the public internet.
+- Automatic TLS Encryption – Ensures end-to-end encryption without managing certificates.
+- Seamless Integration – Works with Cloudflare Access, Zero Trust, and Load Balancing.
+
+## Prerequisites
+
+- Virtual Machine running Ubuntu 22.04 or newer
+
+### Update Package Repository and Packages
+
+```bash
+sudo apt update
+sudo apt upgrade
+```
+
+## Download and Install Cloudflared
+
+```bash
+wget -q https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb
+sudo dpkg -i cloudflared-linux-amd64.deb
+cloudflared --version
+```
+
+### Authenticate with Cloudflare
+
+```bash
+cloudflared tunnel login
+```
+
+Provide your Cloudflare credentials and token
+
+## Create a new tunnel
+
+```bash
+cloudflared tunnel create my-tunnel
+```
+
+### Configure the tunnel
+
+```bash
+cloudflared tunnel route dns my-tunnel jenkins.devopsfoundry.com
+```
+
+- `Copy tunnel ID`
+
+Create "config.yml" file in cloudflared dir
+
+```bash
+vim ~/.cloudflared/config.yml
+```
+
+```yaml
+tunnel: j-tunnel
+credentials-file: /home/femi/.cloudflared/3e9dfb6f-63c9-4902-b48d-83aa2abb386a.json
+ingress:
+  - hostname: jenkins.devopsfoundry.com
+    service: http://127.0.0.1:8080 # Another service using HTTPS
+  - service: http_status:404 # Default for unmatched requests
+```
+
+## Start the tunnel
+
+```bash
+cloudflared tunnel run my-tunnel
+```
+
+### Exposing Kubernetes Pods
+
+### Kubernetes Integration
+
+**Create Secret with tunnel ID:**
+
+```bash
+kubectl create secret generic tunnel-credentials \
+--namespace argocd \
+--from-file=credentials.json=/home/femi/.cloudflared/1fae3131-bf44-4430-afb9-7fa364fd48b9.json
+```
+
+```bash
+vim cloudflared.yaml
+```
+
+Edit this file to suit your application:
+
+```yaml
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloudflared
+  namespace: argocd
+spec:
+  selector:
+    matchLabels:
+      app: cloudflared
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: cloudflared
+    spec:
+      containers:
+        - name: cloudflared
+          image: cloudflare/cloudflared:2022.3.0
+          args:
+            - tunnel
+            - --config
+            - /etc/cloudflared/config/config.yaml
+            - run
+          livenessProbe:
+            httpGet:
+              path: /ready
+              port: 2000
+            failureThreshold: 1
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          volumeMounts:
+            - name: config
+              mountPath: /etc/cloudflared/config
+              readOnly: true
+            - name: creds
+              mountPath: /etc/cloudflared/creds
+              readOnly: true
+      volumes:
+        - name: creds
+          secret:
+            secretName: tunnel-credentials
+        - name: config
+          configMap:
+            name: cloudflared
+            items:
+              - key: config.yaml
+                path: config.yaml
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cloudflared
+  namespace: argocd
+data:
+  config.yaml: |
+    # Name of the tunnel you want to run
+    tunnel: argo-tunnel
+    credentials-file: /etc/cloudflared/creds/credentials.json
+    metrics: 0.0.0.0:2000
+    no-autoupdate: true
+    ingress:
+      - hostname: argocd.devopsfoundry.com
+        service: https://argocd-server:443
+        originRequest:
+          noTLSVerify: true
+      - service: http_status:404
+```
+
+```bash
+kubectl apply -f cloudflared.yaml
+```
