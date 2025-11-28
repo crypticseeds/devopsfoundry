@@ -187,10 +187,7 @@ export default async function BlogPostPage(props: BlogPostPageProps) {
       <Feedback onRateAction={onRateAction} />
 
       {/* Post Navigation */}
-      <PostNavigation
-        pageTree={blogSource.pageTree}
-        currentUrl={page.url}
-      />
+      <PostNavigation pageTree={blogSource.pageTree} currentUrl={page.url} />
     </DocsPage>
   );
 }

@@ -9,10 +9,7 @@ interface PostNavigationProps {
   currentUrl: string;
 }
 
-export function PostNavigation({
-  pageTree,
-  currentUrl,
-}: PostNavigationProps) {
+export function PostNavigation({ pageTree, currentUrl }: PostNavigationProps) {
   const neighbours = findNeighbour(pageTree, currentUrl);
 
   if (!neighbours.previous && !neighbours.next) {
@@ -28,7 +25,7 @@ export function PostNavigation({
             className={cn(
               "flex-1 group flex items-start gap-3 p-4 rounded-lg border border-border",
               "hover:border-primary/50 hover:bg-accent/50 transition-colors",
-              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
             )}
           >
             <div className="flex-shrink-0 mt-0.5">
@@ -50,7 +47,7 @@ export function PostNavigation({
               "flex-1 group flex items-start gap-3 p-4 rounded-lg border border-border",
               "hover:border-primary/50 hover:bg-accent/50 transition-colors",
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-              !neighbours.previous && "sm:ml-auto"
+              !neighbours.previous && "sm:ml-auto",
             )}
           >
             <div className="flex-1 min-w-0 text-right">
@@ -68,4 +65,3 @@ export function PostNavigation({
     </div>
   );
 }
-
