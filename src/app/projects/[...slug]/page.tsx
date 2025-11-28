@@ -10,6 +10,7 @@ import { LLMCopyButton } from "@/components/ai/llm-copy-button";
 import { ViewOptions } from "@/components/ai/view-options";
 import { Feedback } from "@/components/feedback";
 import { onRateAction } from "@/lib/feedback-action";
+import { PostNavigation } from "@/components/post-navigation";
 import Image from "next/image";
 import type { FumadocsPageWithBody } from "@/types/fumadocs";
 import { getMDXComponents } from "../../../../mdx-components";
@@ -188,6 +189,12 @@ export default async function ProjectPage(props: ProjectPageProps) {
 
       {/* Feedback component */}
       <Feedback onRateAction={onRateAction} />
+
+      {/* Post Navigation */}
+      <PostNavigation
+        pageTree={projectsSource.pageTree}
+        currentUrl={page.url}
+      />
     </DocsPage>
   );
 }
