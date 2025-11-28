@@ -61,12 +61,12 @@ export function Projects() {
                   {project.title}
                 </h3>
 
-                <p className="mb-6 text-sm leading-relaxed text-muted-foreground line-clamp-3">
+                <p className="mb-4 text-sm leading-relaxed text-muted-foreground line-clamp-2">
                   {project.description}
                 </p>
 
                 <div className="mt-auto">
-                  <div className="mb-6 flex flex-wrap gap-2">
+                  <div className="mb-4 flex flex-wrap gap-2">
                     {project.tags.map((tag) => (
                       <span
                         key={tag}
