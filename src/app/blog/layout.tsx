@@ -7,19 +7,7 @@ import { blogSource } from "@/lib/sources";
 
 export default function BlogLayout({ children }: { children: ReactNode }) {
   return (
-    <RootProvider
-      search={{
-        enabled: true,
-        provider: "orama",
-        api: "/api/search",
-        hotKey: [
-          {
-            display: "K",
-            key: "k",
-          },
-        ],
-      }}
-    >
+    <RootProvider>
       <div className="flex min-h-screen flex-col bg-background">
         <Header />
         <DocsLayout
