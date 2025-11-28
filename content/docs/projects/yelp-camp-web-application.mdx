@@ -1,0 +1,245 @@
+---
+title: Yelp Camp Web Application
+description: Deploying Yelp Camp using advanced DevOps methodologies including CI/CD, GitOps, application monitoring, and secure deployments
+date: 2024-11-28
+author: Femi Akinlotan
+project: Yelp Camp
+tags:
+  [Node.js, Kubernetes, Jenkins, ArgoCD, Terraform, DevOps, GitOps, Monitoring]
+banner: /projects/yelp-camp-web-application/banner.png
+---
+
+## Introduction
+
+When I discovered the **Yelp Camp** web application on GitHub, I saw an opportunity to showcase my expertise in modern DevOps practices, including DevSecOps, Site Reliability Engineering (SRE), and Platform Engineering. Originally based on "The Web Developer Bootcamp" by Colt Steele, Yelp Camp offers a rich feature set with user authentication, cloud-based image storage, and interactive maps. My goal was to deploy this application using advanced DevOps methodologies, highlighting my skills in CI/CD, GitOps, application monitoring, and secure deployments while effectively integrating and managing various technologies.
+
+## Tech Stack
+
+The Yelp Camp platform leverages a range of technologies across multiple domains. Here’s a categorized breakdown of the tech stack:
+
+**Languages & Frameworks**
+
+- **Node.js & Express**: Backend language and server framework for application logic and REST API.
+- **Bootstrap**: Front-end UI framework for responsive design.
+
+**Database & Data Management**
+
+- **MongoDB Atlas**: Cloud-hosted document database used to store application data.
+- **Cloudinary**: Cloud-based service for storing and serving user-uploaded images.
+
+**Authentication & Security**
+
+- **Passport**: Authentication middleware for user login and registration.
+- **Helmet**: Secures HTTP headers and improves overall app security.
+- **Doppler**: Centralized secrets and environment variable management.
+
+**Infrastructure, Deployment & CI/CD**
+
+- **Docker**: Containers for consistent and reproducible deployments across environments.
+- **Terraform**: Infrastructure as Code for automating provisioning of cloud resources.
+- **Jenkins**: Automation server used to build and deploy code via CI/CD pipelines.
+- **Helm**: Kubernetes package management for deployment and lifecycle management of app resources.
+- **ArgoCD**: GitOps continuous delivery for declarative management of Kubernetes resources.
+
+**Monitoring & Observability**
+
+- **Prometheus**: Collects metrics and monitors application performance.
+- **Grafana**: Dashboards for visualizing Prometheus (and other) metrics and trends.
+
+**Quality & Security Assurance**
+
+- **Trivy**: Vulnerability scanner for Docker images and file systems.
+- **SonarQube**: Static code analysis to ensure code quality, reliability, and maintainability.
+
+**Mapping & Geolocation**
+
+- **Mapbox**: Provides interactive maps for location-based features within the app.
+
+## Application Architecture
+
+![Application Architecture](/projects/yelp-camp-web-application/architecture.png)
+
+In this section, I'll walk you through the architecture of our Yelp Camp application, as depicted in the image above. This setup is designed to ensure scalability, reliability, and efficient monitoring.
+
+### User Interaction
+
+The journey begins with the user interacting with the application through a web interface. This interface is powered by a Node.js application, which is containerised using Docker. This approach not only simplifies deployment but also ensures consistency across different environments.
+
+### Backend Infrastructure
+
+The Node.js application communicates with MongoDB Atlas, a cloud-based database service. This allows for efficient data management without worrying about the underlying infrastructure. The connection to MongoDB is configured in the application, as seen in the app.js file:
+
+```javascript
+const dbUrl = process.env.DB_URL || "mongodb://127.0.0.1:27017/yelp-camp";
+mongoose.connect(dbUrl, {
+  useNewUrlParser: true,
+  useCreateIndex: true,
+  useUnifiedTopology: true,
+  useFindAndModify: false,
+});
+```
+
+### Load Balancing
+
+To effectively manage increased traffic and ensure high availability, I incorporated an **AWS Application Load Balancer (ALB)** into the architecture. The ALB efficiently distributes incoming requests across multiple instances of the application running within an **Amazon EKS (Elastic Kubernetes Service)** cluster. Leveraging Kubernetes' powerful orchestration capabilities, the containers are automatically managed to handle deployment, scaling, and operational tasks. This setup not only enhances fault tolerance and performance under heavy traffic loads but also ensures a seamless and reliable user experience.
+
+### Monitoring
+
+Monitoring is a crucial aspect of our architecture. I used **Prometheus** and **Grafana** to keep an eye on the application's performance and health. Prometheus collects metrics, while Grafana provides a visual dashboard for real-time monitoring. This setup helps us quickly identify and resolve any issues that may arise.
+
+## Setting Up Environment
+
+The first phase involved creating a robust CI/CD environment. Using Terraform, I provisioned several Ubuntu VMs on AWS EC2 to host our essential tools, Jenkins master and agent, SonarQube, ArgoCD
+
+```hcl
+resource "aws_instance" "jenkins_master" {
+  ami           = "ami-ubuntu-20.04"
+  instance_type = "t2.medium"
+  tags = {
+    Name = "jenkins-master"
+  }
+}
+```
+
+### Kubernetes Infrastructure with AWS EKS
+
+For the application infrastructure, I chose AWS EKS as our Kubernetes platform. Using Terraform, I defined the cluster configuration:
+
+```hcl
+module "eks" {
+  source          = "terraform-aws-modules/eks/aws"
+  cluster_name    = "yelp-camp-cluster"
+  cluster_version = "1.30"
+  vpc_id     = module.vpc.vpc_id
+  subnet_ids = module.vpc.private_subnets
+  eks_managed_node_groups = {
+    general = {
+      desired_size = 2
+      max_size     = 3
+      min_size     = 1
+      instance_type = ["t3.medium"]
+    }
+  }
+}
+```
+
+## CI/CD Pipelines with Jenkins
+
+Jenkins serves as the backbone of our CI pipeline. I configured it to automate the entire process from code commit to deployment. Here's a brief overview of the tools and steps involved in the pipeline.
+
+**Pipeline Stages**
+
+Below is a breakdown of the pipeline stages configured in Jenkins:
+
+- **Source Code Management**: Fetches the latest code from the GitHub repository.
+
+- **Build and Test**: Installs dependencies and runs automated tests using Node.js.
+
+- **Code Quality Analysis**: **SonarQube Integration**: Analyses the codebase for potential bugs, vulnerabilities, and code smells.
+
+![SonarQube Analysis](/projects/yelp-camp-web-application/sonarqube.png)
+
+- **Security Scanning**: **Trivy** scans the Docker images for vulnerabilities, ensuring the application adheres to high security standards.
+
+- **Containerisation**: Docker images are built, tagged, and pushed to a private container registry.
+
+- **Deployment to Kubernetes**: Using Helm charts, Kubernetes manifests are templated and applied to deploy the application on EKS.
+
+### Ensuring a Robust and Secure Pipeline
+
+By integrating **Trivy** and **SonarQube** into our Jenkins pipeline, we have built a highly robust and automated framework that places security and code quality at the forefront of our development process. Trivy ensures early detection of vulnerabilities in both filesystem components and Docker images, enabling proactive mitigation of potential risks. Simultaneously, SonarQube provides in-depth insights into code maintainability, reliability, and security by identifying bugs, vulnerabilities, and code smells.
+
+This continuous feedback loop empowers us to address issues promptly, ensuring our codebase remains secure, efficient, and aligned with industry standards. Automating these processes not only streamlines the development lifecycle but also significantly reduces the likelihood of human errors, enhancing confidence in every deployment. The resulting setup has been pivotal in maintaining the reliability and scalability of Yelp Camp, enabling us to focus on developing and enhancing its features without compromising security or stability.
+
+Jenkins Pipeline View:
+
+![CI/CD Pipeline](/projects/yelp-camp-web-application/ci-cd.png)
+
+## Managing Secrets with Doppler
+
+Managing environment variables securely was a priority. Doppler was integrated with EKS to inject secrets at runtime, ensuring sensitive data like database credentials and API keys remained secure.
+
+- **Doppler Integration**: Centralised management of sensitive information.
+- **Kubernetes Secrets**: Doppler injected secrets into pods at runtime.
+- **Helm Chart Configuration**: Updated `values.yaml` to include Doppler tokens.
+
+Sample Doppler Configuration:
+
+```yaml
+env:
+  - name: DOPPLER_TOKEN
+    valueFrom:
+      secretKeyRef:
+        name: doppler-secret
+        key: service-token
+```
+
+![Doppler Configuration](/projects/yelp-camp-web-application/doppler.png)
+
+## Helm Charts
+
+Helm is a powerful package manager for Kubernetes that simplifies the deployment of applications by using charts. Charts are collections of files that describe a related set of Kubernetes resources. In the deployment process, Helm charts are used to template Kubernetes manifests, allowing us to manage complex applications with ease. By parameterising the manifests, Helm enables us to deploy the same application across different environments with minimal changes.
+
+## Applying GitOps Principles using ArgoCD
+
+ArgoCD is a declarative, GitOps continuous delivery tool for Kubernetes. It automates the deployment of applications to Kubernetes clusters by monitoring Git repositories for changes. When a change is detected, ArgoCD synchronises the live state of the application with the desired state defined in the Git repository. This ensures that any drift between the two states is automatically corrected, providing a robust and reliable deployment process.
+
+- **Git as Single Source of Truth**: All configurations stored in Git.
+- **Automated Synchronisation**: ArgoCD monitors the repository and updates the cluster accordingly.
+- **Rollback Capability**: Easy rollback to previous states if issues arise.
+
+**Advantages**
+
+- Automated drift correction between live and desired states.
+- Easy rollback capabilities.
+
+![ArgoCD Dashboard](/projects/yelp-camp-web-application/argocd.png)
+
+## Monitoring
+
+Prometheus scrapes application metrics, which are then visualised in Grafana. The monitoring stack provides insights into CPU usage, memory allocation, and container health.
+
+To maintain application health and performance:
+
+- **Prometheus**: Collected metrics from the application.
+- **Grafana**: Visualised data for monitoring and alerts.
+- **Proactive Issue Resolution**: Enabled quick identification and resolution of potential problems.
+
+![Grafana Dashboard](/projects/yelp-camp-web-application/grafana.png)
+
+## Challenges Faced and Solutions
+
+### Integrating Doppler with AWS EKS
+
+**Challenge**: Securely passing secrets to application pods during Helm installations.
+
+**Solution**:
+
+- **Service Token Generation**: Created a Doppler service token for EKS.
+- **Kubernetes Secret Storage**: Stored the token securely.
+- **Helm Chart Update**: Modified `values.yaml` to pass the token as an environment variable.
+
+## Lessons Learned and Key Takeaways
+
+**_Technical Insights_**
+
+- **GitOps Best Practices**: Reinforced the value of a single source of truth for configurations.
+- **Secrets Management**: Highlighted the importance of secure handling of sensitive data.
+- **CI/CD Proficiency**: Enhanced understanding of automating deployment pipelines.
+- **Infrastructure as Code**: Emphasised consistency and repeatability in provisioning resources.
+
+**_Personal Growth_**
+
+- **Problem-Solving Skills**: Improved ability to troubleshoot and resolve complex issues.
+- **Adaptability**: Gained experience in integrating diverse tools and technologies.
+- **Continuous Learning**: Recognised the importance of staying updated with emerging DevOps trends.
+
+---
+
+## Conclusion
+
+Deploying the Yelp Camp web application was a rewarding journey that showcased my capabilities in modern DevOps, DevSecOps, and SRE practices. From infrastructure provisioning with Terraform, continuous integration with Jenkins to deploying with EKS, Helm, ArgoCD and incorporating secrets management with Doppler, this project highlighted the power of modern DevOps practices in delivering scalable, secure, and reliable applications.
+
+I invite you to explore the project on its [**GitHub repository**](https://github.com/crypticseeds/yelp-camp) and share your valuable feedback. Your insights are crucial in helping me refine my skills and improve further. If you have any questions or suggestions, please don't hesitate to reach out—I'd love to hear from you!
+
+**Thank you for joining me on this journey!**

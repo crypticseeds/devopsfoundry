@@ -74,7 +74,7 @@ export async function POST(request: NextRequest) {
             "X-RateLimit-Remaining": "0",
             "Retry-After": "60",
           },
-        }
+        },
       );
     }
 
@@ -90,7 +90,7 @@ export async function POST(request: NextRequest) {
         {
           status: 200,
           headers: { "X-RateLimit-Remaining": remaining.toString() },
-        }
+        },
       );
     }
 
@@ -98,7 +98,7 @@ export async function POST(request: NextRequest) {
     if (!name || !email || !message) {
       return NextResponse.json(
         { error: "Name, email, and message are required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -111,21 +111,21 @@ export async function POST(request: NextRequest) {
     if (!isValidName(sanitizedName)) {
       return NextResponse.json(
         { error: "Name must be between 2 and 100 characters" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     if (!isValidEmail(sanitizedEmail)) {
       return NextResponse.json(
         { error: "Please provide a valid email address" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     if (!isValidMessage(sanitizedMessage)) {
       return NextResponse.json(
         { error: "Message must be between 10 and 5000 characters" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -135,10 +135,10 @@ export async function POST(request: NextRequest) {
     // 2. Store in a database
     // 3. Integrate with a CRM
     // 4. Use a service like SendGrid, Resend, or AWS SES
-    
+
     // For now, we'll simulate processing without logging any PII
     // NOTE: Never log sensitive data like email addresses or message content
-    
+
     // Simulate processing delay
     await new Promise((resolve) => setTimeout(resolve, 500));
 
@@ -147,22 +147,18 @@ export async function POST(request: NextRequest) {
       {
         status: 200,
         headers: { "X-RateLimit-Remaining": remaining.toString() },
-      }
+      },
     );
   } catch {
     // Generic error without exposing internal details
     return NextResponse.json(
       { error: "An error occurred. Please try again later." },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
 
 // Block GET requests to prevent data exposure in URL parameters
 export async function GET() {
-  return NextResponse.json(
-    { error: "Method not allowed" },
-    { status: 405 }
-  );
+  return NextResponse.json({ error: "Method not allowed" }, { status: 405 });
 }
-

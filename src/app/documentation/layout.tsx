@@ -14,7 +14,7 @@ export default function TutorialsLayout({ children }: { children: ReactNode }) {
             title: (
               <div className="flex items-center gap-3">
                 <Image
-                  src="/logo-mark.png"
+                  src="/assets/logo-mark.png"
                   alt="Logo"
                   width={24}
                   height={24}

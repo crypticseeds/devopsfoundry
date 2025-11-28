@@ -5,7 +5,11 @@ import { Breadcrumbs, createBlogBreadcrumbs } from "@/components/Breadcrumbs";
 import { DocsPage, DocsBody } from "fumadocs-ui/page";
 import { LLMCopyButton } from "@/components/ai/llm-copy-button";
 import { ViewOptions } from "@/components/ai/view-options";
+import { Feedback } from "@/components/feedback";
+import { onRateAction } from "@/lib/feedback-action";
 import Image from "next/image";
+import type { FumadocsPageWithBody } from "@/types/fumadocs";
+import { getMDXComponents } from "../../../../mdx-components";
 
 interface BlogPostPageProps {
   params: Promise<{ slug: string[] }>;
@@ -48,14 +52,24 @@ export default async function BlogPostPage(props: BlogPostPageProps) {
     notFound();
   }
 
-  const MDX = page.data.body;
+  const pageWithBody = page as typeof page & FumadocsPageWithBody;
+  const MDX =
+    pageWithBody.body ||
+    (page.data as unknown as { body?: typeof pageWithBody.body }).body;
   const frontmatter = page.data as typeof page.data & BlogFrontmatter;
   const tags = frontmatter.tags || [];
   const banner = frontmatter.banner;
 
+  if (!MDX) {
+    notFound();
+  }
+
   return (
     <DocsPage
-      toc={page.data.toc}
+      toc={
+        pageWithBody.toc ||
+        (page.data as unknown as { toc?: typeof pageWithBody.toc }).toc
+      }
       tableOfContent={{ style: "clerk" }}
       footer={{ enabled: false }}
       breadcrumb={{ enabled: false }}
@@ -72,7 +86,7 @@ export default async function BlogPostPage(props: BlogPostPageProps) {
         <div className="not-prose relative w-full aspect-[2/1] rounded-xl overflow-hidden mb-8">
           <Image
             src={banner}
-            alt={page.data.title}
+            alt={page.data.title || "Blog post banner"}
             fill
             className="object-cover"
             priority
@@ -165,8 +179,11 @@ export default async function BlogPostPage(props: BlogPostPageProps) {
       </div>
 
       <DocsBody>
-        <MDX />
+        <MDX components={getMDXComponents({})} />
       </DocsBody>
+
+      {/* Feedback component */}
+      <Feedback onRateAction={onRateAction} />
     </DocsPage>
   );
 }

@@ -1,0 +1,49 @@
+---
+title: Trivy
+description: Learn how to install and use Trivy for container and infrastructure security scanning
+date: 2024-11-28
+author: Femi Akinlotan
+difficulty: beginner
+duration: 25 minutes
+tags: [trivy, security, scanning, containers, devops, devsecops]
+---
+
+## What is Trivy?
+
+Trivy is an open-source security scanner developed by Aqua Security for detecting vulnerabilities, misconfigurations, and exposed secrets in container images, code repositories, and cloud infrastructure. It provides fast and comprehensive security checks, making it an essential tool for DevSecOps and cloud-native security.
+
+Trivy supports scanning Docker images, Kubernetes clusters, Terraform configurations, and more, integrating seamlessly into CI/CD pipelines to enhance security automation.
+
+## Prerequisites
+
+- Virtual Machine running Ubuntu 22.04 or newer
+
+### Update Package Repository and Packages
+
+```bash
+sudo apt update
+sudo apt upgrade
+```
+
+### Add Trivy Repo
+
+```bash
+sudo apt-get install -y wget apt-transport-https gnupg
+wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | gpg --dearmor | sudo tee /usr/share/keyrings/trivy.gpg > /dev/null
+echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb generic main" | sudo tee -a /etc/apt/sources.list.d/trivy.list
+```
+
+## Install Trivy
+
+### Apt installation
+
+```bash
+sudo apt-get update
+sudo apt-get install -y trivy
+```
+
+### Docker Installation
+
+```bash
+docker run -v /var/run/docker.sock:/var/run/docker.sock -v $HOME/Library/Caches:/root/.cache/ aquasec/trivy:0.54.1 image python:3.4-alpine
+```

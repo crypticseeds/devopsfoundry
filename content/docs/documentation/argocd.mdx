@@ -1,0 +1,219 @@
+---
+title: ArgoCD
+description: Learn how to install and configure ArgoCD for GitOps-based continuous delivery on Kubernetes
+date: 2024-11-28
+author: Femi Akinlotan
+difficulty: intermediate
+duration: 60 minutes
+tags: [argocd, gitops, kubernetes, ci-cd, devops]
+---
+
+## What is Argo CD?
+
+**Argo CD** is a declarative continuous delivery tool designed to automate the deployment and management of Kubernetes applications. It follows the **GitOps** methodology, where the desired application state is stored in a Git repository. Argo CD continuously monitors the application's running state and compares it with the configuration defined in the repository. When changes are detected, Argo CD notifies users and provides options to synchronise the live state with the desired state, ensuring consistent deployments.
+
+## Prerequisites
+
+- Virtual Machine running Ubuntu 22.04 or newer
+
+### Update Package Repository and Upgrade Packages
+
+```bash
+sudo apt update
+sudo apt upgrade
+```
+
+### Create Kubernetes Cluster
+
+```bash
+sudo bash
+curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="server" sh -s - --disable traefik
+exit
+mkdir .kube
+sudo cp /etc/rancher/k3s/k3s.yaml ./config
+sudo chown dmistry:dmistry config
+chmod 400 config
+export KUBECONFIG=~/.kube/config
+```
+
+---
+
+## Install ArgoCD
+
+**Create ArgoCD namespace:**
+
+```bash
+kubectl create namespace argocd
+```
+
+```bash
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+```
+
+**Change ArgoCD server service to NodePort:**
+
+```bash
+kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "NodePort"}}'
+```
+
+**OR Port Forward:**
+
+```bash
+kubectl port-forward svc/argocd-server -n argocd 8080:443 --address 0.0.0.0
+```
+
+```bash
+kubectl get svc -n argocd
+```
+
+**Fetch ArgoCD admin password:**
+
+```bash
+kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+```
+
+Copy `Temporary Password`
+
+---
+
+## Optional - Enable TLS
+
+### TLS Configuration
+
+**Install Cert-Manager:**
+
+```bash
+helm repo add jetstack https://charts.jetstack.io
+helm repo update
+helm install \
+cert-manager jetstack/cert-manager \
+--namespace cert-manager \
+--create-namespace \
+--version v1.11.0 \
+--set installCRDs=true
+```
+
+Create Cluster Issuer for Lets Encrypt `vim letsencrypt-product.yaml` and paste the below contents adjust your email address
+
+**Create a cluster issuer manifest:**
+
+```yaml
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+name: letsencrypt-prod
+spec:
+acme:
+server: https://acme-v02.api.letsencrypt.org/directory
+email: contact@devopsfoundry.com
+privateKeySecretRef:
+name: letsencrypt-prod
+solvers:
+- http01:
+ingress:
+class: nginx
+```
+
+**Apply manifest:**
+
+```bash
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.7.0/deploy/static/provider/cloud/deploy.yaml
+```
+
+Create ingress for ArgoCD `vim ingress.yaml` and paste the below contents adjust the domain name
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+name: argocd-server-ingress
+namespace: argocd
+annotations:
+cert-manager.io/cluster-issuer: letsencrypt-prod
+kubernetes.io/ingress.class: nginx
+kubernetes.io/tls-acme: "true"
+nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+# If you encounter a redirect loop or are getting a 307 response code
+# then you need to force the nginx ingress to connect to the backend using HTTPS.
+#
+nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+spec:
+  rules:
+    - host: argocd.devopsfoundry.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: argocd-server
+                port:
+                  name: https
+  tls:
+    - hosts:
+        - argocd.devopsfoundry.com
+      secretName: argocd-secret # do not change, this is provided by Argo CD
+```
+
+**Apply ingress manifest:**
+
+```bash
+kubectl apply -f ingress.yaml
+```
+
+---
+
+### Install ArgoCD CLI
+
+```bash
+curl -sSL -o argocd-linux-amd64 https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
+sudo install -m 555 argocd-linux-amd64 /usr/local/bin/argocd
+rm argocd-linux-amd64
+```
+
+**CLI Configuration**
+
+Login to ArgoCD and change the password
+
+```bash
+argocd login argocd.devopsfoundry.com
+```
+
+```bash
+argocd account update-password
+```
+
+**Allow admin account to create API tokens:**
+
+```bash
+kubectl patch -n argocd configmap argocd-cm --type merge -p '{"data":{"accounts.admin":"apiKey"}}'
+```
+
+Generate the Token:
+
+```bash
+argocd account generate-token
+```
+
+**Add repository:**
+
+```bash
+argocd repo add <repository-url> --username <your-username> --password <your-password>
+# use github token as password
+```
+
+**Run this command where you have EKS Cluster:**
+
+```bash
+argocd login argocd.devopsfoundry.com:30444 --username admin --password {{YOUR_ARGOCD_UI_PASSWORD}} #Change the nodeport
+```
+
+```bash
+argocd cluster add arn:aws:eks:eu-west-2:your-aws-account-arn:cluster/main-eks-cluster --kubeconfig ~/.kube/config #Replace cluster arn
+```
+
+## Uninstalling K3s
+
+```bash
+/usr/local/bin/k3s-uninstall.sh
+```

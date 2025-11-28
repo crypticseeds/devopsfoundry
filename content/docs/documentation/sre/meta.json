@@ -1,5 +1,0 @@
-{
-  "title": "SRE",
-  "description": "Monitoring, incident response, and reliability engineering",
-  "pages": ["kubernetes-monitoring"]
-}
