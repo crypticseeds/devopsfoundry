@@ -20,7 +20,11 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
 export function getMDXComponents(components: MDXComponents = {}): MDXComponents {
   return {
     ...defaultMdxComponents,
-    ...Twoslash,
+    // Twoslash components for TypeScript tooltips
+    Popup,
+    PopupContent,
+    PopupTrigger,
+    // Mermaid diagrams
     Mermaid,
     ...components,
   };
