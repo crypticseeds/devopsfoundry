@@ -53,7 +53,9 @@ export default async function BlogPostPage(props: BlogPostPageProps) {
   }
 
   const pageWithBody = page as typeof page & FumadocsPageWithBody;
-  const MDX = pageWithBody.body || (page.data as unknown as { body?: typeof pageWithBody.body }).body;
+  const MDX =
+    pageWithBody.body ||
+    (page.data as unknown as { body?: typeof pageWithBody.body }).body;
   const frontmatter = page.data as typeof page.data & BlogFrontmatter;
   const tags = frontmatter.tags || [];
   const banner = frontmatter.banner;
@@ -64,7 +66,10 @@ export default async function BlogPostPage(props: BlogPostPageProps) {
 
   return (
     <DocsPage
-      toc={pageWithBody.toc || (page.data as unknown as { toc?: typeof pageWithBody.toc }).toc}
+      toc={
+        pageWithBody.toc ||
+        (page.data as unknown as { toc?: typeof pageWithBody.toc }).toc
+      }
       tableOfContent={{ style: "clerk" }}
       footer={{ enabled: false }}
       breadcrumb={{ enabled: false }}

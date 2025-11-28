@@ -69,7 +69,9 @@ export default async function TutorialPage(props: TutorialPageProps) {
   }
 
   const pageWithBody = page as typeof page & FumadocsPageWithBody;
-  const MDX = pageWithBody.body || (page.data as unknown as { body?: typeof pageWithBody.body }).body;
+  const MDX =
+    pageWithBody.body ||
+    (page.data as unknown as { body?: typeof pageWithBody.body }).body;
 
   if (!MDX) {
     notFound();
@@ -77,7 +79,10 @@ export default async function TutorialPage(props: TutorialPageProps) {
 
   return (
     <DocsPage
-      toc={pageWithBody.toc || (page.data as unknown as { toc?: typeof pageWithBody.toc }).toc}
+      toc={
+        pageWithBody.toc ||
+        (page.data as unknown as { toc?: typeof pageWithBody.toc }).toc
+      }
       tableOfContent={{ style: "clerk", enabled: true }}
       footer={{ enabled: false }}
     >

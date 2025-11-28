@@ -11,4 +11,3 @@ export function MDXContent({ MDX }: MDXContentProps) {
   const components = useMDXComponents({});
   return <MDX components={components} />;
 }
-

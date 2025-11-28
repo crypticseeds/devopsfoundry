@@ -17,7 +17,9 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
 }
 
 // Server-safe version that can be called in server components
-export function getMDXComponents(components: MDXComponents = {}): MDXComponents {
+export function getMDXComponents(
+  components: MDXComponents = {},
+): MDXComponents {
   return {
     ...defaultMdxComponents,
     // Twoslash components for TypeScript tooltips

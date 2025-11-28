@@ -56,7 +56,9 @@ export default async function ProjectPage(props: ProjectPageProps) {
   }
 
   const pageWithBody = page as typeof page & FumadocsPageWithBody;
-  const MDX = pageWithBody.body || (page.data as unknown as { body?: typeof pageWithBody.body }).body;
+  const MDX =
+    pageWithBody.body ||
+    (page.data as unknown as { body?: typeof pageWithBody.body }).body;
   const frontmatter = page.data as typeof page.data & ProjectFrontmatter;
   const banner = frontmatter.banner;
   const tags = frontmatter.tags || [];
@@ -67,7 +69,10 @@ export default async function ProjectPage(props: ProjectPageProps) {
 
   return (
     <DocsPage
-      toc={pageWithBody.toc || (page.data as unknown as { toc?: typeof pageWithBody.toc }).toc}
+      toc={
+        pageWithBody.toc ||
+        (page.data as unknown as { toc?: typeof pageWithBody.toc }).toc
+      }
       tableOfContent={{ style: "clerk" }}
       footer={{ enabled: false }}
       breadcrumb={{ enabled: false }}
