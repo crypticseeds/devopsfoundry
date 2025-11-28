@@ -1,0 +1,33 @@
+# robots.txt for DevOps Foundry Portfolio Site
+# https://www.robotstxt.org/robotstxt.html
+
+User-agent: *
+
+# Allow crawling of public content
+Allow: /
+Allow: /blog/
+Allow: /projects/
+Allow: /documentation/
+
+# Block sensitive paths and directories
+Disallow: /api/
+Disallow: /_next/
+Disallow: /admin/
+Disallow: /private/
+
+# Block development and build artifacts
+Disallow: /*.json$
+Disallow: /*.map$
+Disallow: /source.config.ts
+Disallow: /sonar-project.properties
+
+# Prevent crawling of search and dynamic routes
+Disallow: /*?*
+Disallow: /search
+
+# Sitemap location (uncomment when sitemap is available)
+# Sitemap: https://devopsfoundry.com/sitemap.xml
+
+# Crawl-delay for politeness (optional, not all bots respect this)
+Crawl-delay: 1
+
