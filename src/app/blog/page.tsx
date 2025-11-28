@@ -1,8 +1,5 @@
 import { blogSource } from "@/lib/sources";
-import {
-  Breadcrumbs,
-  createBlogBreadcrumbs,
-} from "@/components/Breadcrumbs";
+import { Breadcrumbs, createBlogBreadcrumbs } from "@/components/Breadcrumbs";
 import { BlogList } from "@/components/BlogList";
 
 interface BlogFrontmatter {

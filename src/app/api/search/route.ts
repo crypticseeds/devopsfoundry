@@ -17,4 +17,3 @@ export const { GET } = createFromSource(blogSource, {
     };
   },
 });
-

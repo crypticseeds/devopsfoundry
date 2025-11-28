@@ -34,11 +34,7 @@ export function BlogList({ posts: allPosts }: BlogListProps) {
     const query = searchQuery.toLowerCase();
     return allPosts.filter((post) => {
       const tags = post.data.tags || [];
-      const searchableText = [
-        post.data.title,
-        post.data.description,
-        ...tags,
-      ]
+      const searchableText = [post.data.title, post.data.description, ...tags]
         .filter(Boolean)
         .join(" ")
         .toLowerCase();
@@ -131,4 +127,3 @@ export function BlogList({ posts: allPosts }: BlogListProps) {
     </>
   );
 }
-

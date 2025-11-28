@@ -23,4 +23,3 @@ export function BlogSearch({ query, onSearchChange }: BlogSearchProps) {
     </div>
   );
 }
-
