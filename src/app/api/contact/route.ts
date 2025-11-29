@@ -25,7 +25,7 @@ function isValidEmail(email: string): boolean {
 }
 
 function isValidName(name: string): boolean {
-  return name.length >= 2 && name.length <= 100;
+  return name.length >= 2 && name.length <= 50;
 }
 
 function isValidMessage(message: string): boolean {
@@ -85,11 +85,22 @@ export async function POST(request: NextRequest) {
     }
 
     // Parse request body
-    const body = await request.json();
-    const { name, email, message, website } = body;
+    let body;
+    try {
+      body = await request.json();
+    } catch (parseError) {
+      console.error("Failed to parse request body:", parseError);
+      return NextResponse.json(
+        { error: "Invalid request format" },
+        { status: 400 },
+      );
+    }
+
+    const { firstName, lastName, email, message, website } = body;
 
     // Honeypot check - if website field is filled, it's likely a bot
     if (website && website.length > 0) {
+      console.log("Honeypot triggered - bot detected");
       // Silently accept but don't process (to not reveal honeypot)
       return NextResponse.json(
         { success: true, message: "Message sent successfully" },
@@ -101,30 +112,39 @@ export async function POST(request: NextRequest) {
     }
 
     // Validate required fields
-    if (!name || !email || !message) {
+    if (!firstName || !lastName || !email || !message) {
+      console.error("Missing required fields:", {
+        hasFirstName: !!firstName,
+        hasLastName: !!lastName,
+        hasEmail: !!email,
+        hasMessage: !!message,
+      });
       return NextResponse.json(
-        { error: "Name, email, and message are required" },
+        { error: "First name, last name, email, and message are required" },
         { status: 400 },
       );
     }
 
     // Sanitize inputs
-    const sanitizedName = sanitizeInput(name);
+    const sanitizedFirstName = sanitizeInput(firstName);
+    const sanitizedLastName = sanitizeInput(lastName);
     const sanitizedEmail = sanitizeInput(email).toLowerCase();
     const sanitizedMessage = sanitizeInput(message);
 
     // Validate inputs
-    if (!isValidName(sanitizedName)) {
+    if (!isValidName(sanitizedFirstName)) {
       return NextResponse.json(
-        { error: "Name must be between 2 and 100 characters" },
+        { error: "First name must be between 2 and 50 characters" },
         { status: 400 },
       );
     }
 
-    // Split name into first and last name
-    const nameParts = sanitizedName.trim().split(/\s+/);
-    const firstName = nameParts[0] || sanitizedName;
-    const lastName = nameParts.slice(1).join(" ") || "";
+    if (!isValidName(sanitizedLastName)) {
+      return NextResponse.json(
+        { error: "Last name must be between 2 and 50 characters" },
+        { status: 400 },
+      );
+    }
 
     if (!isValidEmail(sanitizedEmail)) {
       return NextResponse.json(
@@ -148,13 +168,12 @@ export async function POST(request: NextRequest) {
 
     // Store lead in Supabase
     const leadResult = await storeLead(
-      firstName,
-      lastName,
+      sanitizedFirstName,
+      sanitizedLastName,
       sanitizedEmail,
       sanitizedMessage,
     );
 
-    // Log storage result for debugging (but don't expose to user)
     if (!leadResult.success) {
       console.error("Failed to store lead in Supabase:", leadResult.error);
       // Continue processing even if storage fails - don't break the user experience
@@ -162,7 +181,8 @@ export async function POST(request: NextRequest) {
 
     // Track contact form submission in PostHog
     await trackContactFormSubmission(
-      sanitizedName,
+      sanitizedFirstName,
+      sanitizedLastName,
       sanitizedEmail,
       sanitizedMessage.length,
     );
@@ -170,10 +190,9 @@ export async function POST(request: NextRequest) {
     // Send confirmation email to user using Resend template
     const emailResult = await sendContactConfirmationEmail(
       sanitizedEmail,
-      sanitizedName,
+      sanitizedFirstName,
     );
 
-    // Log email result for debugging (but don't expose to user)
     if (!emailResult.success) {
       console.error("Failed to send confirmation email:", emailResult.error);
       // Continue processing even if email fails - don't break the user experience
@@ -181,7 +200,8 @@ export async function POST(request: NextRequest) {
 
     // Send admin notification email (optional - only if ADMIN_EMAIL is configured)
     const adminEmailResult = await sendAdminNotificationEmail(
-      sanitizedName,
+      sanitizedFirstName,
+      sanitizedLastName,
       sanitizedEmail,
       sanitizedMessage,
     );
@@ -204,7 +224,13 @@ export async function POST(request: NextRequest) {
         headers: { "X-RateLimit-Remaining": remaining.toString() },
       },
     );
-  } catch {
+  } catch (error) {
+    // Log the error for debugging
+    console.error("Contact form API error:", error);
+    console.error("Error details:", {
+      message: error instanceof Error ? error.message : "Unknown error",
+      stack: error instanceof Error ? error.stack : undefined,
+    });
     // Generic error without exposing internal details
     return NextResponse.json(
       { error: "An error occurred. Please try again later." },

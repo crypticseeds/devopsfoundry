@@ -5,14 +5,16 @@ import { CheckCircle2, Loader2, Send, AlertCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface FormData {
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   message: string;
   website: string; // Honeypot field
 }
 
 interface FormErrors {
-  name?: string;
+  firstName?: string;
+  lastName?: string;
   email?: string;
   message?: string;
   general?: string;
@@ -22,7 +24,8 @@ export function Contact() {
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [isSuccess, setIsSuccess] = React.useState(false);
   const [formData, setFormData] = React.useState<FormData>({
-    name: "",
+    firstName: "",
+    lastName: "",
     email: "",
     message: "",
     website: "", // Honeypot - should remain empty
@@ -33,10 +36,19 @@ export function Contact() {
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
 
-    if (!formData.name.trim()) {
-      newErrors.name = "Name is required";
-    } else if (formData.name.length < 2 || formData.name.length > 100) {
-      newErrors.name = "Name must be between 2 and 100 characters";
+    if (!formData.firstName.trim()) {
+      newErrors.firstName = "First name is required";
+    } else if (
+      formData.firstName.length < 2 ||
+      formData.firstName.length > 50
+    ) {
+      newErrors.firstName = "First name must be between 2 and 50 characters";
+    }
+
+    if (!formData.lastName.trim()) {
+      newErrors.lastName = "Last name is required";
+    } else if (formData.lastName.length < 2 || formData.lastName.length > 50) {
+      newErrors.lastName = "Last name must be between 2 and 50 characters";
     }
 
     if (!formData.email.trim()) {
@@ -86,7 +98,8 @@ export function Contact() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          name: formData.name.trim(),
+          firstName: formData.firstName.trim(),
+          lastName: formData.lastName.trim(),
           email: formData.email.trim().toLowerCase(),
           message: formData.message.trim(),
           website: formData.website, // Honeypot
@@ -107,7 +120,13 @@ export function Contact() {
       }
 
       // Success - clear form and show success message
-      setFormData({ name: "", email: "", message: "", website: "" });
+      setFormData({
+        firstName: "",
+        lastName: "",
+        email: "",
+        message: "",
+        website: "",
+      });
       setIsSuccess(true);
     } catch {
       setErrors({
@@ -120,7 +139,13 @@ export function Contact() {
 
   const resetForm = () => {
     setIsSuccess(false);
-    setFormData({ name: "", email: "", message: "", website: "" });
+    setFormData({
+      firstName: "",
+      lastName: "",
+      email: "",
+      message: "",
+      website: "",
+    });
     setErrors({});
   };
 
@@ -221,30 +246,62 @@ export function Contact() {
                   />
                 </div>
 
-                <div>
-                  <label
-                    htmlFor="name"
-                    className="mb-2 block text-sm font-medium text-foreground"
-                  >
-                    Name <span className="text-accent-red">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleInputChange}
-                    maxLength={100}
-                    className={`w-full rounded-lg border bg-background px-4 py-2.5 text-sm outline-none transition-all focus:ring-2 ${
-                      errors.name
-                        ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
-                        : "border-secondary/20 focus:border-accent-blue focus:ring-accent-blue/20"
-                    }`}
-                    placeholder="Your Name"
-                  />
-                  {errors.name && (
-                    <p className="mt-1 text-xs text-red-500">{errors.name}</p>
-                  )}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label
+                      htmlFor="firstName"
+                      className="mb-2 block text-sm font-medium text-foreground"
+                    >
+                      First Name <span className="text-accent-red">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      id="firstName"
+                      name="firstName"
+                      value={formData.firstName}
+                      onChange={handleInputChange}
+                      maxLength={50}
+                      className={`w-full rounded-lg border bg-background px-4 py-2.5 text-sm outline-none transition-all focus:ring-2 ${
+                        errors.firstName
+                          ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
+                          : "border-secondary/20 focus:border-accent-blue focus:ring-accent-blue/20"
+                      }`}
+                      placeholder="John"
+                    />
+                    {errors.firstName && (
+                      <p className="mt-1 text-xs text-red-500">
+                        {errors.firstName}
+                      </p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="lastName"
+                      className="mb-2 block text-sm font-medium text-foreground"
+                    >
+                      Last Name <span className="text-accent-red">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      id="lastName"
+                      name="lastName"
+                      value={formData.lastName}
+                      onChange={handleInputChange}
+                      maxLength={50}
+                      className={`w-full rounded-lg border bg-background px-4 py-2.5 text-sm outline-none transition-all focus:ring-2 ${
+                        errors.lastName
+                          ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
+                          : "border-secondary/20 focus:border-accent-blue focus:ring-accent-blue/20"
+                      }`}
+                      placeholder="Doe"
+                    />
+                    {errors.lastName && (
+                      <p className="mt-1 text-xs text-red-500">
+                        {errors.lastName}
+                      </p>
+                    )}
+                  </div>
                 </div>
 
                 <div>

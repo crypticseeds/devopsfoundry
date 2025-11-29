@@ -22,6 +22,7 @@ export function getPostHogClient(): PostHog | null {
 
 /**
  * Track a feedback submission event
+ * Uses single event with properties for flexible PostHog insights
  */
 export async function trackFeedbackSubmission(
   url: string,
@@ -35,19 +36,35 @@ export async function trackFeedbackSubmission(
   }
 
   try {
-    await client.capture({
-      distinctId: "anonymous", // We don't track users, just events
+    // Structure properties for PostHog - ensure all are simple types
+    // PostHog requires properties to be string, number, boolean, or array of these
+    // Match the structure used in contact form tracking for consistency
+    const properties = {
+      feedback_opinion: opinion, // "good" or "bad" - visible in PostHog
+      feedback_url: url, // The page/post URL - visible in PostHog
+      feedback_message: message || "", // The feedback message - visible in PostHog
+      has_message: !!message && message.trim().length > 0,
+      message_length: message?.length || 0,
+    };
+
+    // Capture the event - same pattern as contact form
+    client.capture({
+      distinctId: "anonymous",
       event: "feedback_submitted",
-      properties: {
-        url,
-        opinion,
-        message: message || "",
-        timestamp: new Date().toISOString(),
-      },
+      properties,
     });
+
+    // For server actions, force immediate send
+    // PostHog Node.js batches events (sends every 10s by default)
+    // Server actions may exit before auto-flush, so we shutdown to force send
+    await client.shutdown();
+
+    // Reinitialize client for next use
+    posthogClient = null;
   } catch (error) {
-    // Log error but don't throw - we don't want to break the feedback flow
     console.error("Failed to track feedback in PostHog:", error);
+    // Reset client on error to prevent stuck state
+    posthogClient = null;
   }
 }
 
@@ -55,7 +72,8 @@ export async function trackFeedbackSubmission(
  * Track a contact form submission event
  */
 export async function trackContactFormSubmission(
-  name: string,
+  firstName: string,
+  lastName: string,
   email: string,
   messageLength: number,
 ): Promise<void> {
@@ -70,7 +88,8 @@ export async function trackContactFormSubmission(
       distinctId: "anonymous", // We don't track users, just events
       event: "contact_form_submitted",
       properties: {
-        name,
+        first_name: firstName,
+        last_name: lastName,
         // Don't include email in properties for privacy
         email_length: email.length,
         message_length: messageLength,

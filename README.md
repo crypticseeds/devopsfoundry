@@ -192,6 +192,7 @@ Environment variables are managed via [Doppler](https://doppler.com/) for secure
 
 - `RESEND_API_KEY` - Resend API key for email sending
 - `RESEND_CONTACT_TEMPLATE_ID` - Resend template ID for contact confirmations
+- `RESEND_ADMIN_TEMPLATE_ID` - Resend template ID for admin notifications
 - `SUPABASE_URL` - Supabase project URL
 - `SUPABASE_ANON_KEY` - Supabase anonymous key
 - `POSTHOG_API_KEY` - PostHog server-side API key
@@ -200,7 +201,8 @@ Environment variables are managed via [Doppler](https://doppler.com/) for secure
 
 **Optional:**
 
-- `FROM_EMAIL` - Email sender address (defaults to template settings)
+- `FROM_EMAIL` - Email sender address (required for email sending)
+- `FROM_NAME` - Display name for email sender
 - `ADMIN_EMAIL` - Admin notification email address
 - `NEXT_PUBLIC_SITE_URL` - Site URL for metadata
 

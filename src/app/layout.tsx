@@ -5,7 +5,7 @@ import "katex/dist/katex.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { StatusWidget } from "@/components/StatusWidget";
 import { Background } from "@/components/Background";
-import { PostHogProvider } from "@/components/posthog-provider";
+import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const montserrat = Montserrat({
@@ -44,19 +44,18 @@ export default function RootLayout({
       <body
         className={`${montserrat.variable} ${inter.variable} ${jetbrainsMono.variable} antialiased`}
       >
-        <PostHogProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="dark"
-            enableSystem
-            disableTransitionOnChange
-          >
-            {children}
-            <Background />
-            <StatusWidget />
-            <SpeedInsights />
-          </ThemeProvider>
-        </PostHogProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+          <Background />
+          <StatusWidget />
+          <Analytics />
+          <SpeedInsights />
+        </ThemeProvider>
       </body>
     </html>
   );
