@@ -161,12 +161,12 @@ export async function POST(request: NextRequest) {
     }
 
     // Process the contact form submission
-    // 1. Store lead in Supabase
+    // 1. Store lead in Neon DB
     // 2. Track in PostHog for analytics
     // 3. Send confirmation email to user
     // 4. Send notification email to admin (optional)
 
-    // Store lead in Supabase
+    // Store lead in Neon DB
     const leadResult = await storeLead(
       sanitizedFirstName,
       sanitizedLastName,
@@ -175,7 +175,7 @@ export async function POST(request: NextRequest) {
     );
 
     if (!leadResult.success) {
-      console.error("Failed to store lead in Supabase:", leadResult.error);
+      console.error("Failed to store lead in Neon DB:", leadResult.error);
       // Continue processing even if storage fails - don't break the user experience
     }
 

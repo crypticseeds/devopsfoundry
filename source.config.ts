@@ -92,6 +92,7 @@ export const blogs = defineDocs({
       banner: z.string().optional(),
       author: z.string().optional(),
       tags: z.array(z.string()).optional(),
+      featured: z.boolean().optional(),
     }),
   },
 });

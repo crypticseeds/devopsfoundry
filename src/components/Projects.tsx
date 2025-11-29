@@ -57,9 +57,18 @@ export function Projects() {
                   <span>{project.date}</span>
                 </div>
 
-                <h3 className="mb-2 text-xl font-bold tracking-tight text-card-foreground transition-colors group-hover:text-accent-blue">
-                  {project.title}
-                </h3>
+                {project.links.writeup ? (
+                  <Link
+                    href={project.links.writeup}
+                    className="mb-2 text-xl font-bold tracking-tight text-card-foreground transition-colors hover:text-accent-blue"
+                  >
+                    {project.title}
+                  </Link>
+                ) : (
+                  <h3 className="mb-2 text-xl font-bold tracking-tight text-card-foreground transition-colors group-hover:text-accent-blue">
+                    {project.title}
+                  </h3>
+                )}
 
                 <p className="mb-4 text-sm leading-relaxed text-muted-foreground line-clamp-2">
                   {project.description}

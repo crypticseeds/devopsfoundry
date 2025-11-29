@@ -98,73 +98,44 @@ export const skills = {
 
 export const projects = [
   {
-    title: "Kubernetes Auto-Scaler",
+    title: "E-commerce Microservices",
     description:
-      "An intelligent auto-scaling operator for K8s clusters that optimizes cost and performance using custom metrics.",
-    tags: ["Go", "Kubernetes", "Prometheus", "AWS"],
-    image: "/projects/k8s-autoscaler.png",
-    date: "Jan 2024",
+      "Building a scalable e-commerce platform using microservices architecture with Spring Boot, Netflix Eureka, Spring Cloud Gateway, and KeyCloak.",
+    tags: ["Java", "Spring Boot", "Microservices", "Kubernetes", "Kafka"],
+    image: "/projects/e-commerce-microservices/banner.jpg",
+    date: "Nov 2024",
     links: {
-      github: "https://github.com",
-      demo: "https://example.com",
-      writeup: "/blog/scaling-prometheus",
-    },
-  },
-  {
-    title: "LLM RAG Pipeline",
-    description:
-      "Production-ready RAG pipeline for enterprise documentation, featuring semantic search and hallucination checks.",
-    tags: ["Python", "LangChain", "Pinecone", "FastAPI"],
-    image: "/projects/llm-rag-pipeline.png",
-    date: "Feb 2024",
-    links: {
-      github: "https://github.com",
-      demo: "https://example.com",
-      writeup: null,
-    },
-  },
-  {
-    title: "Multi-Cloud Terraform Modules",
-    description:
-      "A suite of reusable, compliant Terraform modules for deploying secure infrastructure across AWS and Azure.",
-    tags: ["Terraform", "HCL", "Azure", "AWS"],
-    image: "/projects/terraform-multicloud.png",
-    date: "Mar 2024",
-    links: {
-      github: "https://github.com",
+      github: "https://github.com/crypticseeds/ecommerce-microservices.git",
       demo: null,
-      writeup: null,
+      writeup: "/projects/e-commerce-microservices",
     },
   },
-];
-
-export const blogPosts = [
   {
-    title: "Scaling Prometheus for High-Cardinality Metrics",
-    summary:
-      "Strategies for managing metric explosion in large-scale Kubernetes environments using Thanos and downsampling.",
-    date: "Oct 12, 2024",
-    tags: ["SRE", "Observability", "Prometheus"],
-    slug: "scaling-prometheus",
-    banner: "/blogs/sre-incident.png",
+    title: "Secure API Management Platform",
+    description:
+      "Building a secure API management platform from the ground up using Go, PostgreSQL, Docker, Kubernetes, and modern observability tools.",
+    tags: ["Go", "Kubernetes", "Docker", "PostgreSQL", "Prometheus"],
+    image: "/projects/secure-api-management-platform/banner.png",
+    date: "Nov 2024",
+    links: {
+      github:
+        "https://github.com/crypticseeds/secure-api-management-platform.git",
+      demo: null,
+      writeup: "/projects/secure-api-management-platform",
+    },
   },
   {
-    title: "Building an Internal Developer Platform with Backstage",
-    summary:
-      "How we reduced onboarding time by 40% by centralizing documentation and service templates.",
-    date: "Sep 28, 2024",
-    tags: ["Platform Engineering", "Backstage", "DX"],
-    slug: "internal-developer-platform",
-    banner: "/blogs/ci-cd-pipeline.png",
-  },
-  {
-    title: "Optimizing LLM Inference Costs on AWS",
-    summary:
-      "A deep dive into instance selection, quantization, and batching strategies to reduce AI infrastructure bills.",
-    date: "Sep 15, 2024",
-    tags: ["AI Engineering", "AWS", "FinOps"],
-    slug: "optimizing-llm-costs",
-    banner: "/blogs/aws-cost-optimization.png",
+    title: "Yelp Camp Web Application",
+    description:
+      "Deploying Yelp Camp using advanced DevOps methodologies including CI/CD, GitOps, application monitoring, and secure deployments.",
+    tags: ["Node.js", "Kubernetes", "Jenkins", "ArgoCD", "Terraform"],
+    image: "/projects/yelp-camp-web-application/banner.png",
+    date: "Nov 2024",
+    links: {
+      github: "https://github.com/crypticseeds/yelp-camp.git",
+      demo: null,
+      writeup: "/projects/yelp-camp-web-application",
+    },
   },
 ];
 

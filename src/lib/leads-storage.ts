@@ -1,22 +1,29 @@
-import { createClient } from "@supabase/supabase-js";
+import postgres from "postgres";
 
-// Initialize Supabase client
+// Initialize Neon DB PostgreSQL client
 // Environment variables are injected via Doppler
-let supabaseClient: ReturnType<typeof createClient> | null = null;
+let sql: ReturnType<typeof postgres> | null = null;
 
-export function getSupabaseClient() {
-  const supabaseUrl = process.env.SUPABASE_URL;
-  const supabaseKey = process.env.SUPABASE_ANON_KEY;
+export function getDatabaseClient() {
+  const databaseUrl = process.env.NEON_DATABASE_URL;
 
-  if (!supabaseUrl || !supabaseKey) {
+  if (!databaseUrl) {
     return null;
   }
 
-  if (!supabaseClient) {
-    supabaseClient = createClient(supabaseUrl, supabaseKey);
+  if (!sql) {
+    // Require SSL in production (Vercel) but allow local dev without SSL
+    const isProduction =
+      process.env.VERCEL === "1" || process.env.NODE_ENV === "production";
+    const requireSSL = isProduction || process.env.NEON_REQUIRE_SSL === "true";
+
+    sql = postgres(databaseUrl, {
+      max: 1, // Use a single connection for serverless environments
+      ...(requireSSL && { ssl: "require" }), // Only require SSL in production
+    });
   }
 
-  return supabaseClient;
+  return sql;
 }
 
 export interface Lead {
@@ -27,7 +34,7 @@ export interface Lead {
 }
 
 /**
- * Store a contact form lead in Supabase
+ * Store a contact form lead in Neon DB
  */
 export async function storeLead(
   firstName: string,
@@ -35,37 +42,24 @@ export async function storeLead(
   email: string,
   message?: string,
 ): Promise<{ success: boolean; error?: string }> {
-  const supabase = getSupabaseClient();
+  const db = getDatabaseClient();
 
-  if (!supabase) {
+  if (!db) {
     return {
       success: false,
-      error:
-        "Supabase not configured. Please set SUPABASE_URL and SUPABASE_ANON_KEY in Doppler.",
+      error: "Neon DB not configured. Please set NEON_DATABASE_URL in Doppler.",
     };
   }
 
   try {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { error } = await (supabase.from("leads") as any).insert({
-      first_name: firstName,
-      last_name: lastName,
-      email: email.toLowerCase(),
-      message: message || null,
-      created_at: new Date().toISOString(),
-    });
-
-    if (error) {
-      console.error("Failed to store lead in Supabase:", error);
-      return {
-        success: false,
-        error: error.message,
-      };
-    }
+    await db`
+      INSERT INTO leads (first_name, last_name, email, message, created_at)
+      VALUES (${firstName}, ${lastName}, ${email.toLowerCase()}, ${message || null}, NOW())
+    `;
 
     return { success: true };
   } catch (error) {
-    console.error("Unexpected error storing lead:", error);
+    console.error("Failed to store lead in Neon DB:", error);
     return {
       success: false,
       error: error instanceof Error ? error.message : "Unknown error",
