@@ -2,7 +2,13 @@
 import { cn } from "../lib/cn";
 import { buttonVariants } from "./ui/button";
 import { ThumbsDown, ThumbsUp } from "lucide-react";
-import { type SyntheticEvent, useEffect, useState, useTransition } from "react";
+import {
+  type SyntheticEvent,
+  useEffect,
+  useState,
+  useTransition,
+  useId,
+} from "react";
 import {
   Collapsible,
   CollapsibleContent,
@@ -42,6 +48,9 @@ export function Feedback({
   onRateAction: (url: string, feedback: Feedback) => Promise<ActionResponse>;
 }) {
   const url = usePathname();
+  const collapsibleId = useId();
+  // Initialize mounted state - will be true on client, false on server
+  const [mounted] = useState(() => typeof window !== "undefined");
   // Initialize state from localStorage using lazy initializer
   const [previous, setPrevious] = useState<Result | null>(() => {
     if (typeof window === "undefined") return null;
@@ -97,8 +106,42 @@ export function Feedback({
 
   const activeOpinion = previous?.opinion ?? opinion;
 
+  // Don't render Collapsible until mounted to avoid hydration mismatch
+  if (!mounted) {
+    return (
+      <div className="border-y py-3">
+        <div className="flex flex-row items-center gap-2">
+          <p className="text-sm font-medium pe-2">How is this guide?</p>
+          <button
+            disabled
+            className={cn(
+              rateButtonVariants({
+                active: false,
+              }),
+            )}
+          >
+            <ThumbsUp />
+            Good
+          </button>
+          <button
+            disabled
+            className={cn(
+              rateButtonVariants({
+                active: false,
+              }),
+            )}
+          >
+            <ThumbsDown />
+            Bad
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <Collapsible
+      id={collapsibleId}
       open={opinion !== null || previous !== null}
       onOpenChange={(v) => {
         if (!v) setOpinion(null);

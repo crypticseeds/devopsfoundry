@@ -1,11 +1,10 @@
 import Link from "next/link";
-import { findNeighbour } from "fumadocs-core/page-tree";
+import { findNeighbour, type Root } from "fumadocs-core/page-tree";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/cn";
-import type { PageTree } from "fumadocs-core/source";
 
 interface PostNavigationProps {
-  pageTree: PageTree.Item;
+  pageTree: Root;
   currentUrl: string;
 }
 
