@@ -25,7 +25,10 @@
 - **🔧 Easy Customization** - Centralized content management in `src/data/content.ts`
 - **📊 Project Showcase** - Highlight your best DevOps and AI/ML projects
 - **✍️ Blog Integration** - Share technical insights and tutorials
-- **📧 Contact Form** - Integrated Cal.com scheduling for easy connections
+- **📧 Contact Form** - Integrated Cal.com scheduling with automated email confirmations
+- **📈 Analytics** - PostHog integration for pageviews, unique visitors, and user behavior tracking
+- **📬 Email Automation** - Resend integration with template-based email confirmations
+- **💾 Lead Management** - Supabase storage for contact form submissions
 - **🏆 Certifications Display** - Showcase your professional achievements
 
 ---
@@ -47,6 +50,9 @@
 ### Integrations
 
 - **[Cal.com](https://cal.com/)** - Embedded scheduling for contact form
+- **[PostHog](https://posthog.com/)** - Product analytics and event tracking
+- **[Resend](https://resend.com/)** - Transactional email service with templates
+- **[Supabase](https://supabase.com/)** - PostgreSQL database for lead storage
 
 ---
 
@@ -56,7 +62,9 @@
 devopsfoundry/
 ├── src/
 │   ├── app/                    # Next.js App Router
-│   │   ├── layout.tsx          # Root layout with theme provider
+│   │   ├── api/                # API routes
+│   │   │   └── contact/        # Contact form endpoint
+│   │   ├── layout.tsx          # Root layout with providers
 │   │   ├── page.tsx            # Home page
 │   │   └── globals.css         # Global styles
 │   ├── components/             # React components
@@ -65,9 +73,14 @@ devopsfoundry/
 │   │   ├── Skills.tsx          # Skills & certifications
 │   │   ├── Projects.tsx        # Project showcase
 │   │   ├── BlogPreview.tsx     # Blog posts preview
-│   │   ├── Contact.tsx         # Contact form with Cal.com
+│   │   ├── Contact.tsx         # Contact form
 │   │   ├── Footer.tsx          # Footer with social links
+│   │   ├── posthog-provider.tsx # PostHog analytics provider
 │   │   └── theme-provider.tsx  # Theme context provider
+│   ├── lib/                    # Utility libraries
+│   │   ├── email.ts            # Resend email utilities
+│   │   ├── leads-storage.ts    # Supabase lead storage
+│   │   └── posthog.ts          # PostHog analytics
 │   └── data/
 │       └── content.ts          # Centralized content configuration
 ├── public/                     # Static assets
@@ -173,12 +186,23 @@ export const blogPosts = [
 
 ### Environment Variables
 
-Create a `.env.local` file for any environment-specific configuration:
+Environment variables are managed via [Doppler](https://doppler.com/) for secure configuration:
 
-```env
-# Add your environment variables here
-NEXT_PUBLIC_SITE_URL=https://yourdomain.com
-```
+**Required:**
+
+- `RESEND_API_KEY` - Resend API key for email sending
+- `RESEND_CONTACT_TEMPLATE_ID` - Resend template ID for contact confirmations
+- `SUPABASE_URL` - Supabase project URL
+- `SUPABASE_ANON_KEY` - Supabase anonymous key
+- `POSTHOG_API_KEY` - PostHog server-side API key
+- `NEXT_PUBLIC_POSTHOG_KEY` - PostHog client-side API key
+- `NEXT_PUBLIC_POSTHOG_HOST` - PostHog host URL (optional)
+
+**Optional:**
+
+- `FROM_EMAIL` - Email sender address (defaults to template settings)
+- `ADMIN_EMAIL` - Admin notification email address
+- `NEXT_PUBLIC_SITE_URL` - Site URL for metadata
 
 ### Styling
 
@@ -299,6 +323,9 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 - **[Tailwind CSS](https://tailwindcss.com/)** - Styling framework
 - **[Lucide](https://lucide.dev/)** - Icon library
 - **[Cal.com](https://cal.com/)** - Scheduling integration
+- **[PostHog](https://posthog.com/)** - Product analytics
+- **[Resend](https://resend.com/)** - Email service
+- **[Supabase](https://supabase.com/)** - Database platform
 
 ---
 
