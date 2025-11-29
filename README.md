@@ -28,7 +28,7 @@
 - **📧 Contact Form** - Integrated Cal.com scheduling with automated email confirmations
 - **📈 Analytics** - PostHog integration for pageviews, unique visitors, and user behavior tracking
 - **📬 Email Automation** - Resend integration with template-based email confirmations
-- **💾 Lead Management** - Supabase storage for contact form submissions
+- **💾 Lead Management** - Neon DB storage for contact form submissions with database branching support
 - **🏆 Certifications Display** - Showcase your professional achievements
 
 ---
@@ -52,7 +52,7 @@
 - **[Cal.com](https://cal.com/)** - Embedded scheduling for contact form
 - **[PostHog](https://posthog.com/)** - Product analytics and event tracking
 - **[Resend](https://resend.com/)** - Transactional email service with templates
-- **[Supabase](https://supabase.com/)** - PostgreSQL database for lead storage
+- **[Neon DB](https://neon.tech/)** - Serverless PostgreSQL database with branching for lead storage
 
 ---
 
@@ -79,7 +79,7 @@ devopsfoundry/
 │   │   └── theme-provider.tsx  # Theme context provider
 │   ├── lib/                    # Utility libraries
 │   │   ├── email.ts            # Resend email utilities
-│   │   ├── leads-storage.ts    # Supabase lead storage
+│   │   ├── leads-storage.ts    # Neon DB lead storage
 │   │   └── posthog.ts          # PostHog analytics
 │   └── data/
 │       └── content.ts          # Centralized content configuration
@@ -193,8 +193,7 @@ Environment variables are managed via [Doppler](https://doppler.com/) for secure
 - `RESEND_API_KEY` - Resend API key for email sending
 - `RESEND_CONTACT_TEMPLATE_ID` - Resend template ID for contact confirmations
 - `RESEND_ADMIN_TEMPLATE_ID` - Resend template ID for admin notifications
-- `SUPABASE_URL` - Supabase project URL
-- `SUPABASE_ANON_KEY` - Supabase anonymous key
+- `NEON_DATABASE_URL` - Neon DB connection string (supports branching for dev/staging/prod)
 - `POSTHOG_API_KEY` - PostHog server-side API key
 - `NEXT_PUBLIC_POSTHOG_KEY` - PostHog client-side API key
 - `NEXT_PUBLIC_POSTHOG_HOST` - PostHog host URL (optional)
@@ -327,7 +326,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 - **[Cal.com](https://cal.com/)** - Scheduling integration
 - **[PostHog](https://posthog.com/)** - Product analytics
 - **[Resend](https://resend.com/)** - Email service
-- **[Supabase](https://supabase.com/)** - Database platform
+- **[Neon DB](https://neon.tech/)** - Serverless PostgreSQL database with branching
 
 ---
 

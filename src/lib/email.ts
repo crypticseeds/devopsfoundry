@@ -153,15 +153,57 @@ export async function sendAdminNotificationEmail(
     // Combine first and last name for full name display
     const fullName = `${firstName} ${lastName}`.trim();
 
+    // Format timestamp in a safe format for Resend templates
+    // Use ISO format then convert to readable format without commas
+    const now = new Date();
+    const timestamp = now
+      .toLocaleString("en-US", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: true,
+      })
+      .replace(/,/g, ""); // Remove commas that might break template parsing
+
+    // Sanitize message content to prevent template rendering issues
+    // Escape Handlebars syntax that might be interpreted as template expressions
+    // Use backslash escaping which is the standard Handlebars way
+    const sanitizedMessage = (message || "")
+      .replace(/\{\{/g, "\\{{") // Escape opening handlebars with backslash
+      .replace(/\}\}/g, "\\}}") // Escape closing handlebars with backslash
+      .replace(/\{/g, "\\{") // Escape single opening brace
+      .replace(/\}/g, "\\}"); // Escape single closing brace
+
+    // Ensure all variables are strings and sanitize message
     // Template variables - ensure these match your template exactly
     const templateVariables: Record<string, string> = {
-      first_name: firstName,
-      last_name: lastName,
-      full_name: fullName,
-      email: email,
-      message: message,
-      timestamp: new Date().toLocaleString(),
+      first_name: (firstName || "").trim(),
+      last_name: (lastName || "").trim(),
+      full_name: fullName || "",
+      email: (email || "").trim(),
+      message: sanitizedMessage,
+      timestamp: timestamp,
     };
+
+    // Log template variables for debugging (without sensitive data)
+    console.log("Sending admin notification with template variables:", {
+      templateId,
+      variables: Object.keys(templateVariables),
+      variableLengths: {
+        first_name: templateVariables.first_name.length,
+        last_name: templateVariables.last_name.length,
+        full_name: templateVariables.full_name.length,
+        email: templateVariables.email.length,
+        message: templateVariables.message.length,
+        timestamp: templateVariables.timestamp.length,
+      },
+      hasSpecialChars: {
+        message: /[{}]/.test(templateVariables.message),
+      },
+    });
 
     const result = await client.emails.send({
       from: fromEmail,
@@ -177,6 +219,7 @@ export async function sendAdminNotificationEmail(
         statusCode: result.error.statusCode,
         message: result.error.message,
         templateId,
+        variables: templateVariables,
       });
       return {
         success: false,
