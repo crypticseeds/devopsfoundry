@@ -30,5 +30,3 @@ Disallow: /search
 
 # Crawl-delay for politeness (optional, not all bots respect this)
 Crawl-delay: 1
-
-

@@ -55,7 +55,8 @@ export async function trackFeedbackSubmission(
  * Track a contact form submission event
  */
 export async function trackContactFormSubmission(
-  name: string,
+  firstName: string,
+  lastName: string,
   email: string,
   messageLength: number,
 ): Promise<void> {
@@ -70,7 +71,8 @@ export async function trackContactFormSubmission(
       distinctId: "anonymous", // We don't track users, just events
       event: "contact_form_submitted",
       properties: {
-        name,
+        first_name: firstName,
+        last_name: lastName,
         // Don't include email in properties for privacy
         email_length: email.length,
         message_length: messageLength,

@@ -30,7 +30,7 @@ export function Header() {
     { name: "Projects", href: "/projects" },
     { name: "Blog", href: "/blog" },
     { name: "Documentation", href: "/documentation" },
-    { name: "Contact", href: "#contact" },
+    { name: "Contact", href: "/contact" },
   ];
 
   return (
