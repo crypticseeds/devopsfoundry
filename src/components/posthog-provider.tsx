@@ -1,13 +1,33 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, Suspense } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import posthog from "posthog-js";
 
-export function PostHogProvider({ children }: { children: React.ReactNode }) {
+function PostHogPageView() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
+  useEffect(() => {
+    // Track pageviews on route change
+    if (pathname && typeof window !== "undefined") {
+      // Check if PostHog is initialized
+      if (posthog.__loaded) {
+        let url = window.origin + pathname;
+        if (searchParams && searchParams.toString()) {
+          url = url + `?${searchParams.toString()}`;
+        }
+        posthog.capture("$pageview", {
+          $current_url: url,
+        });
+      }
+    }
+  }, [pathname, searchParams]);
+
+  return null;
+}
+
+export function PostHogProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     // Initialize PostHog only on client side
     if (typeof window !== "undefined") {
@@ -34,21 +54,12 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  useEffect(() => {
-    // Track pageviews on route change
-    if (pathname && typeof window !== "undefined") {
-      // Check if PostHog is initialized
-      if (posthog.__loaded) {
-        let url = window.origin + pathname;
-        if (searchParams && searchParams.toString()) {
-          url = url + `?${searchParams.toString()}`;
-        }
-        posthog.capture("$pageview", {
-          $current_url: url,
-        });
-      }
-    }
-  }, [pathname, searchParams]);
-
-  return <>{children}</>;
+  return (
+    <>
+      <Suspense fallback={null}>
+        <PostHogPageView />
+      </Suspense>
+      {children}
+    </>
+  );
 }
