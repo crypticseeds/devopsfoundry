@@ -51,29 +51,24 @@ export function Feedback({
   const collapsibleId = useId();
   // Initialize mounted state - will be true on client, false on server
   const [mounted] = useState(() => typeof window !== "undefined");
-  // Initialize state from localStorage using lazy initializer
-  const [previous, setPrevious] = useState<Result | null>(() => {
-    if (typeof window === "undefined") return null;
-    const item = localStorage.getItem(`docs-feedback-${url}`);
-    return item ? (JSON.parse(item) as Result) : null;
-  });
+  // Initialize state from localStorage - always null on server to avoid hydration mismatch
+  const [previous, setPrevious] = useState<Result | null>(null);
   const [opinion, setOpinion] = useState<"good" | "bad" | null>(null);
   const [message, setMessage] = useState("");
   const [isPending, startTransition] = useTransition();
 
-  // Update state when URL changes
-  // Reading from localStorage and syncing with React state is a valid use case
+  // Load from localStorage after hydration to avoid hydration mismatch
   useEffect(() => {
+    if (!mounted) return;
+
     const item = localStorage.getItem(`docs-feedback-${url}`);
-    // Use requestAnimationFrame to defer state update and avoid synchronous setState warning
+    // Defer state update to avoid cascading renders
     requestAnimationFrame(() => {
-      if (item !== null) {
+      if (item) {
         setPrevious(JSON.parse(item) as Result);
-      } else {
-        setPrevious(null);
       }
     });
-  }, [url]);
+  }, [url, mounted]);
 
   useEffect(() => {
     const key = `docs-feedback-${url}`;
@@ -106,43 +101,14 @@ export function Feedback({
 
   const activeOpinion = previous?.opinion ?? opinion;
 
-  // Don't render Collapsible until mounted to avoid hydration mismatch
-  if (!mounted) {
-    return (
-      <div className="border-y py-3">
-        <div className="flex flex-row items-center gap-2">
-          <p className="text-sm font-medium pe-2">How is this guide?</p>
-          <button
-            disabled
-            className={cn(
-              rateButtonVariants({
-                active: false,
-              }),
-            )}
-          >
-            <ThumbsUp />
-            Good
-          </button>
-          <button
-            disabled
-            className={cn(
-              rateButtonVariants({
-                active: false,
-              }),
-            )}
-          >
-            <ThumbsDown />
-            Bad
-          </button>
-        </div>
-      </div>
-    );
-  }
+  // Ensure consistent initial state between server and client
+  // Always render Collapsible but with open=false initially to avoid hydration mismatch
+  const isOpen = mounted && (opinion !== null || previous !== null);
 
   return (
     <Collapsible
       id={collapsibleId}
-      open={opinion !== null || previous !== null}
+      open={isOpen}
       onOpenChange={(v) => {
         if (!v) setOpinion(null);
       }}
