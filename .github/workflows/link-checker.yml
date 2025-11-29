@@ -37,6 +37,7 @@ jobs:
             --exclude "127.0.0.1"
             --exclude "example.com"
             --exclude "https://github.com/username/repo"
+            --exclude "https://devopsfoundry.com"
             './**/*.md'
             './**/*.mdx'
           fail: true
