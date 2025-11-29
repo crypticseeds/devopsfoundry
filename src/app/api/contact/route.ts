@@ -1,4 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
+import { trackContactFormSubmission } from "@/lib/posthog";
+import {
+  sendContactConfirmationEmail,
+  sendAdminNotificationEmail,
+} from "@/lib/email";
+import { storeLead } from "@/lib/leads-storage";
 
 // Simple in-memory rate limiting (use Redis in production for distributed environments)
 const rateLimitMap = new Map<string, { count: number; timestamp: number }>();
@@ -115,6 +121,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Split name into first and last name
+    const nameParts = sanitizedName.trim().split(/\s+/);
+    const firstName = nameParts[0] || sanitizedName;
+    const lastName = nameParts.slice(1).join(" ") || "";
+
     if (!isValidEmail(sanitizedEmail)) {
       return NextResponse.json(
         { error: "Please provide a valid email address" },
@@ -130,17 +141,61 @@ export async function POST(request: NextRequest) {
     }
 
     // Process the contact form submission
-    // In production, you would:
-    // 1. Send an email notification
-    // 2. Store in a database
-    // 3. Integrate with a CRM
-    // 4. Use a service like SendGrid, Resend, or AWS SES
+    // 1. Store lead in Supabase
+    // 2. Track in PostHog for analytics
+    // 3. Send confirmation email to user
+    // 4. Send notification email to admin (optional)
 
-    // For now, we'll simulate processing without logging any PII
-    // NOTE: Never log sensitive data like email addresses or message content
+    // Store lead in Supabase
+    const leadResult = await storeLead(
+      firstName,
+      lastName,
+      sanitizedEmail,
+      sanitizedMessage,
+    );
 
-    // Simulate processing delay
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    // Log storage result for debugging (but don't expose to user)
+    if (!leadResult.success) {
+      console.error("Failed to store lead in Supabase:", leadResult.error);
+      // Continue processing even if storage fails - don't break the user experience
+    }
+
+    // Track contact form submission in PostHog
+    await trackContactFormSubmission(
+      sanitizedName,
+      sanitizedEmail,
+      sanitizedMessage.length,
+    );
+
+    // Send confirmation email to user using Resend template
+    const emailResult = await sendContactConfirmationEmail(
+      sanitizedEmail,
+      sanitizedName,
+    );
+
+    // Log email result for debugging (but don't expose to user)
+    if (!emailResult.success) {
+      console.error("Failed to send confirmation email:", emailResult.error);
+      // Continue processing even if email fails - don't break the user experience
+    }
+
+    // Send admin notification email (optional - only if ADMIN_EMAIL is configured)
+    const adminEmailResult = await sendAdminNotificationEmail(
+      sanitizedName,
+      sanitizedEmail,
+      sanitizedMessage,
+    );
+
+    if (
+      !adminEmailResult.success &&
+      adminEmailResult.error !== "Admin email not configured"
+    ) {
+      console.error(
+        "Failed to send admin notification:",
+        adminEmailResult.error,
+      );
+      // Continue processing even if admin email fails
+    }
 
     return NextResponse.json(
       { success: true, message: "Message sent successfully" },
