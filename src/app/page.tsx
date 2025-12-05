@@ -6,6 +6,7 @@ import { BlogPreview } from "@/components/BlogPreview";
 import { Contact } from "@/components/Contact";
 import { Footer } from "@/components/Footer";
 import { blogSource } from "@/lib/sources";
+import { parseISODate, formatDateLong } from "@/lib/date-utils";
 
 interface BlogFrontmatter {
   date?: string;
@@ -24,28 +25,14 @@ export default function Home() {
     const frontmatter = post.data as typeof post.data & BlogFrontmatter;
 
     // Format date on server to avoid hydration mismatch
-    // Use UTC methods to ensure consistent formatting between server and client
     let formattedDate: string | undefined;
+    let rawDate: Date | undefined;
     if (frontmatter.date) {
-      const date = new Date(frontmatter.date + "T00:00:00Z"); // Ensure UTC parsing
-      const months = [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
-      ];
-      const month = months[date.getUTCMonth()];
-      const day = date.getUTCDate();
-      const year = date.getUTCFullYear();
-      formattedDate = `${month} ${day}, ${year}`;
+      const parsedDate = parseISODate(frontmatter.date);
+      rawDate = parsedDate || undefined;
+      if (rawDate) {
+        formattedDate = formatDateLong(rawDate);
+      }
     }
 
     return {
@@ -59,23 +46,26 @@ export default function Home() {
         tags: frontmatter.tags || [],
         banner: frontmatter.banner,
         featured: frontmatter.featured || false,
+        rawDateISO: frontmatter.date, // Store ISO string for client-side sorting (Date objects get serialized)
       },
     };
   });
 
   // Filter and sort: featured posts first, then by date (newest first)
+  // Sort on server using Date objects before passing to client
   const featuredPosts = serializedPosts
     .filter((post) => post.data.featured)
     .sort((a, b) => {
-      // Sort featured posts by date (newest first)
-      if (a.data.date && b.data.date) {
-        return (
-          new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
-        );
+      // Sort featured posts by date (newest first) using ISO strings
+      const dateA = a.data.rawDateISO ? parseISODate(a.data.rawDateISO) : null;
+      const dateB = b.data.rawDateISO ? parseISODate(b.data.rawDateISO) : null;
+
+      if (dateA && dateB) {
+        return dateB.getTime() - dateA.getTime();
       }
       // If one has a date and the other doesn't, prioritize the one with date
-      if (a.data.date) return -1;
-      if (b.data.date) return 1;
+      if (dateA) return -1;
+      if (dateB) return 1;
       return 0;
     })
     .slice(0, 3); // Limit to 3 featured posts

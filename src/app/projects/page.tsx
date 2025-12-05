@@ -6,6 +6,7 @@ import {
   createProjectBreadcrumbs,
 } from "@/components/Breadcrumbs";
 import { BookOpen } from "lucide-react";
+import { formatISODateShort } from "@/lib/date-utils";
 
 interface ProjectFrontmatter {
   banner?: string;
@@ -16,6 +17,24 @@ interface ProjectFrontmatter {
 
 export default function ProjectsPage() {
   const docs = projectsSource.getPages();
+
+  // Sort projects by date (newest first), projects without dates at the end
+  const sortedDocs = [...docs].sort((a, b) => {
+    const frontmatterA = a.data as typeof a.data & ProjectFrontmatter;
+    const frontmatterB = b.data as typeof b.data & ProjectFrontmatter;
+
+    // If both have dates, sort by date (newest first)
+    if (frontmatterA.date && frontmatterB.date) {
+      return (
+        new Date(frontmatterB.date).getTime() -
+        new Date(frontmatterA.date).getTime()
+      );
+    }
+    // If one has a date and the other doesn't, prioritize the one with date
+    if (frontmatterA.date) return -1;
+    if (frontmatterB.date) return 1;
+    return 0;
+  });
 
   return (
     <main className="flex-1 bg-background">
@@ -30,7 +49,7 @@ export default function ProjectsPage() {
         </div>
 
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {docs.map((doc) => {
+          {sortedDocs.map((doc) => {
             const frontmatter = doc.data as typeof doc.data &
               ProjectFrontmatter;
             return (
@@ -63,12 +82,7 @@ export default function ProjectsPage() {
                     {frontmatter.date && (
                       <>
                         <span>•</span>
-                        <span>
-                          {new Date(frontmatter.date).toLocaleDateString(
-                            "en-US",
-                            { month: "short", year: "numeric" },
-                          )}
-                        </span>
+                        <span>{formatISODateShort(frontmatter.date)}</span>
                       </>
                     )}
                   </div>
@@ -102,7 +116,7 @@ export default function ProjectsPage() {
           })}
         </div>
 
-        {docs.length === 0 && (
+        {sortedDocs.length === 0 && (
           <div className="text-center py-12">
             <p className="text-secondary text-lg">
               No projects yet. Check back soon!

@@ -28,9 +28,22 @@ export const metadata: Metadata = {
   description:
     "Portfolio of London-based DevOps, SRE, Platform and AI Engineer Femi Akinlotan. Showcasing cloud-native infrastructure, CI/CD, observability, MLOps and automation projects for modern engineering teams.",
   icons: {
-    icon: "/assets/logo-mark.png",
+    icon: [
+      { url: "/assets/logo-mark.png", type: "image/png" },
+      { url: "/assets/logo-mark.png", sizes: "32x32", type: "image/png" },
+      { url: "/assets/logo-mark.png", sizes: "16x16", type: "image/png" },
+    ],
     shortcut: "/assets/logo-mark.png",
-    apple: "/assets/logo-mark.png",
+    apple: [
+      { url: "/assets/logo-mark.png", sizes: "180x180", type: "image/png" },
+    ],
+    other: [
+      {
+        rel: "icon",
+        type: "image/png",
+        url: "/assets/logo-mark.png",
+      },
+    ],
   },
 };
 
