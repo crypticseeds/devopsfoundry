@@ -147,6 +147,6 @@ export const footer = {
     linkedin: "https://www.linkedin.com/in/femi-akinlotan/",
     github: "https://github.com/crypticseeds",
     x: "https://x.com/crypticseeds",
-    medium: "https://medium.com/@placeholder",
+    medium: "https://medium.com/@femiakinlotan",
   },
 };

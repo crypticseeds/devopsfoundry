@@ -34,7 +34,7 @@ export function Footer() {
             href={footer.social.github}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-muted-foreground transition-colors hover:text-foreground"
+            className="text-muted-foreground transition-colors hover:text-accent-blue"
             aria-label="GitHub"
             whileHover={{ scale: 1.2, rotate: -5 }}
             whileTap={{ scale: 0.9 }}
@@ -45,7 +45,7 @@ export function Footer() {
             href={footer.social.x}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-muted-foreground transition-colors hover:text-foreground"
+            className="text-muted-foreground transition-colors hover:text-accent-blue"
             aria-label="X (formerly Twitter)"
             whileHover={{ scale: 1.2, rotate: 5 }}
             whileTap={{ scale: 0.9 }}
@@ -63,7 +63,7 @@ export function Footer() {
             href={footer.social.medium}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-muted-foreground transition-colors hover:text-foreground"
+            className="text-muted-foreground transition-colors hover:text-accent-blue"
             aria-label="Medium"
             whileHover={{ scale: 1.2, rotate: -5 }}
             whileTap={{ scale: 0.9 }}
