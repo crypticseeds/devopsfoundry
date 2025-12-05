@@ -5,8 +5,21 @@ import Image from "next/image";
 import { ExternalLink, Github, BookOpen } from "lucide-react";
 import { projects } from "@/data/content";
 import { motion } from "framer-motion";
+import { parseFormattedDate } from "@/lib/date-utils";
 
 export function Projects() {
+  // Sort projects by date (newest first)
+  const sortedProjects = [...projects].sort((a, b) => {
+    const dateA = parseFormattedDate(a.date);
+    const dateB = parseFormattedDate(b.date);
+
+    if (!dateA && !dateB) return 0;
+    if (!dateA) return 1;
+    if (!dateB) return -1;
+
+    return dateB.getTime() - dateA.getTime();
+  });
+
   return (
     <section id="projects" className="py-24 relative">
       <div className="mx-auto max-w-6xl px-6">
@@ -27,7 +40,7 @@ export function Projects() {
         </motion.div>
 
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {projects.map((project, index) => (
+          {sortedProjects.map((project, index) => (
             <motion.div
               key={project.title}
               initial={{ opacity: 0, y: 20 }}

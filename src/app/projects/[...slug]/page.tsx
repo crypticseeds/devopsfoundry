@@ -14,6 +14,7 @@ import { PostNavigation } from "@/components/post-navigation";
 import Image from "next/image";
 import type { FumadocsPageWithBody } from "@/types/fumadocs";
 import { getMDXComponents } from "../../../../mdx-components";
+import { formatISODateLocale } from "@/lib/date-utils";
 
 interface ProjectPageProps {
   params: Promise<{ slug: string[] }>;
@@ -173,11 +174,7 @@ export default async function ProjectPage(props: ProjectPageProps) {
               <line x1="8" x2="8" y1="2" y2="6" />
               <line x1="3" x2="21" y1="10" y2="10" />
             </svg>
-            {new Date(frontmatter.date).toLocaleDateString("en-US", {
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            })}
+            {formatISODateLocale(frontmatter.date)}
           </time>
         )}
       </div>

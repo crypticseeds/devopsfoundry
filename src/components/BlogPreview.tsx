@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { parseFormattedDate, parseISODate } from "@/lib/date-utils";
 
 interface BlogPost {
   url: string;
@@ -14,6 +15,7 @@ interface BlogPost {
     author?: string;
     tags: string[];
     banner?: string;
+    rawDateISO?: string; // ISO date string (Date objects get serialized when passed from server to client)
   };
 }
 
@@ -22,6 +24,29 @@ interface BlogPreviewProps {
 }
 
 export function BlogPreview({ posts = [] }: BlogPreviewProps) {
+  // Sort posts by date (newest first)
+  const sortedPosts = [...posts].sort((a, b) => {
+    // Prefer rawDateISO (ISO string) if available, then try formatted date
+    const dateA = a.data.rawDateISO
+      ? parseISODate(a.data.rawDateISO)
+      : a.data.date
+        ? parseFormattedDate(a.data.date)
+        : null;
+    const dateB = b.data.rawDateISO
+      ? parseISODate(b.data.rawDateISO)
+      : b.data.date
+        ? parseFormattedDate(b.data.date)
+        : null;
+
+    if (dateA && dateB) {
+      return dateB.getTime() - dateA.getTime();
+    }
+    // If one has a date and the other doesn't, prioritize the one with date
+    if (dateA) return -1;
+    if (dateB) return 1;
+    return 0;
+  });
+
   return (
     <section id="blog" className="py-24 relative">
       <div className="mx-auto max-w-6xl px-6">
@@ -41,9 +66,9 @@ export function BlogPreview({ posts = [] }: BlogPreviewProps) {
           </p>
         </motion.div>
 
-        {posts && posts.length > 0 ? (
+        {sortedPosts && sortedPosts.length > 0 ? (
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {posts.map((post, index) => {
+            {sortedPosts.map((post, index) => {
               // Extract slug from slugs array for the link
               const slug = post.slugs.join("/");
 

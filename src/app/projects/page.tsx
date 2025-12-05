@@ -6,6 +6,7 @@ import {
   createProjectBreadcrumbs,
 } from "@/components/Breadcrumbs";
 import { BookOpen } from "lucide-react";
+import { formatISODateShort } from "@/lib/date-utils";
 
 interface ProjectFrontmatter {
   banner?: string;
@@ -81,32 +82,7 @@ export default function ProjectsPage() {
                     {frontmatter.date && (
                       <>
                         <span>•</span>
-                        <span>
-                          {(() => {
-                            // Format date on server to avoid hydration mismatch
-                            // Use UTC methods to ensure consistent formatting between server and client
-                            const date = new Date(
-                              frontmatter.date + "T00:00:00Z",
-                            ); // Ensure UTC parsing
-                            const months = [
-                              "Jan",
-                              "Feb",
-                              "Mar",
-                              "Apr",
-                              "May",
-                              "Jun",
-                              "Jul",
-                              "Aug",
-                              "Sep",
-                              "Oct",
-                              "Nov",
-                              "Dec",
-                            ];
-                            const month = months[date.getUTCMonth()];
-                            const year = date.getUTCFullYear();
-                            return `${month} ${year}`;
-                          })()}
-                        </span>
+                        <span>{formatISODateShort(frontmatter.date)}</span>
                       </>
                     )}
                   </div>

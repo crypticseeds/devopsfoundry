@@ -125,16 +125,17 @@ export const projects = [
     },
   },
   {
-    title: "Yelp Camp Web Application",
+    title: "TFL Journey Expense Calculator",
     description:
-      "Deploying Yelp Camp using advanced DevOps methodologies including CI/CD, GitOps, application monitoring, and secure deployments.",
-    tags: ["Node.js", "Kubernetes", "Jenkins", "ArgoCD", "Terraform"],
-    image: "/projects/yelp-camp-web-application/banner.png",
-    date: "Nov 2024",
+      "An AI-powered expense automation tool that transforms manual transport reimbursement calculations into an intelligent, production-ready workflow.",
+    tags: ["AI", "React", "TypeScript", "Gemini", "Langfuse", "Fullstack"],
+    image: "/projects/tfl-journey-expense-calculator/banner.webp",
+    date: "Dec 2024",
     links: {
-      github: "https://github.com/crypticseeds/yelp-camp.git",
+      github:
+        "https://github.com/crypticseeds/tfL-journey-expense-calculator.git",
       demo: null,
-      writeup: "/projects/yelp-camp-web-application",
+      writeup: "/projects/tfl-journey-expense-calculator",
     },
   },
 ];
