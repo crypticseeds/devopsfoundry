@@ -11,7 +11,7 @@ export const hero = {
   buttons: {
     resume: {
       text: "View Resume",
-      url: "/Femi-Akinlotan-Resume.pdf",
+      url: "/assets/Femi-Akinlotan-5-ai.pdf",
     },
     projects: {
       text: "View Projects",
