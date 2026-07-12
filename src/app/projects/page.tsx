@@ -100,7 +100,7 @@ export default function ProjectsPage() {
                   <div className="mt-auto">
                     <div className="flex flex-wrap gap-2">
                       {frontmatter.tags &&
-                        frontmatter.tags.slice(0, 3).map((tag) => (
+                        frontmatter.tags.slice(0, 3).map((tag: string) => (
                           <span
                             key={tag}
                             className="inline-flex items-center rounded-full border border-secondary/20 bg-secondary/5 px-2.5 py-0.5 text-[10px] font-medium text-secondary transition-colors hover:border-secondary/40 hover:text-foreground hover:bg-secondary/10"
