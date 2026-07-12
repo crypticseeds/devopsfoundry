@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { RootProvider } from "fumadocs-ui/provider";
+import { RootProvider } from "fumadocs-ui/provider/next";
 import { DocsLayout } from "fumadocs-ui/layouts/docs";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
