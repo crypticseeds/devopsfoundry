@@ -33,7 +33,7 @@
     "framer-motion": "^12.23.24",
     "fumadocs-core": "^16.11.3",
     "fumadocs-mdx": "^14.3.2",
-    "fumadocs-twoslash": "^3.3.0",
+    "fumadocs-twoslash": "^4.0.2",
     "fumadocs-ui": "^16.11.3",
     "katex": "^0.16.25",
     "lucide-react": "^0.555.0",
