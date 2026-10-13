@@ -58,7 +58,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.2.10",
     "husky": "^9.1.7",
-    "lint-staged": "^16.2.7",
+    "lint-staged": "^17.6.0",
     "patch-package": "^8.0.1",
     "prettier": "^3.6.2",
     "tailwindcss": "^4.3.2",
